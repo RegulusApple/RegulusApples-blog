@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://halfolds-blog.regulusapplex.chatgpt.site'),
   title: "Halfold’s Blog",
   description: 'Record, Remember, Reinvent, Revolutionize — Halfold’s personal blog.',
   openGraph: {
