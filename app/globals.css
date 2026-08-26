@@ -48,9 +48,8 @@ html, body { max-width: 100%; overflow-x: hidden; }
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(251, 250, 244, .82);
+  background: var(--paper);
   border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(16px);
 }
 
 .global-bar-inner, .page-content {
@@ -100,7 +99,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
 .side-tags button:hover, .side-tags button:focus-visible { color: var(--purple); background: #e9e1f5; transform: translateY(-2px); }
 
 .solitude-main { min-width: 0; }
-.workspace-bar { position: sticky; top: 78px; z-index: 10; display: flex; min-height: 72px; align-items: center; justify-content: space-between; gap: 20px; background: rgba(251, 250, 244, .72); border-bottom: 1px solid var(--line); color: var(--purple-deep); font-size: 13px; font-weight: 800; backdrop-filter: blur(11px); }
+.workspace-bar { position: sticky; top: 78px; z-index: 10; display: flex; min-height: 72px; align-items: center; justify-content: space-between; gap: 20px; background: var(--paper); border-bottom: 1px solid var(--line); color: var(--purple-deep); font-size: 13px; font-weight: 800; }
 .workspace-actions { display: flex; gap: 12px; }
 .workspace-actions button { padding: 8px 11px; border: 1px solid var(--line); border-radius: 11px; background: rgba(255,255,255,.34); color: var(--purple-deep); font-size: 12px; font-weight: 800; transition: color .2s, background .2s, transform .2s; }
 .workspace-actions button:hover, .workspace-actions button:focus-visible { color: var(--purple); background: #eee8f7; transform: translateY(-2px); }
@@ -120,7 +119,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
 .primary-button:active .button-text { transform: translateY(-1px); }
 .welcome-art { position: relative; min-height: 360px; overflow: hidden; background: linear-gradient(140deg, rgba(255,255,255,.76), rgba(237, 242, 199, .9)); }
 .welcome-art::before { position: absolute; inset: 28px; z-index: 1; border: 1px dashed rgba(96, 76, 152, .28); border-radius: 13px; content: ''; pointer-events: none; }
-.welcome-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 58% 45%; mix-blend-mode: multiply; opacity: .92; }
+.welcome-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 58% 45%; opacity: 1; }
 .welcome-art span { position: absolute; right: 23px; bottom: 18px; z-index: 2; color: var(--purple-deep); font-size: 9px; font-weight: 800; letter-spacing: .14em; }
 .art-dots { position: absolute; top: 39px; right: 43px; z-index: 2; width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: -15px 11px 0 var(--purple), -29px 2px 0 var(--red); opacity: .75; }
 
@@ -206,7 +205,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
 .solitude-footer { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-top: 60px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 10px; letter-spacing: .08em; }
 
 /* Linked note pages use the same fresh paper, purple and green system. */
-.article-shell .global-bar { background: rgba(251, 250, 244, .9); }
+.article-shell .global-bar { background: var(--paper); }
 .article-content { width: min(860px, calc(100% - 48px)); margin: 0 auto; padding: 62px 0 100px; }
 .article-topline { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 21px; color: var(--muted); font-size: 10px; letter-spacing: .1em; }
 .article-topline a, .article-footer a { color: var(--purple); font-weight: 800; transition: color .2s; }
