@@ -220,3 +220,28 @@ h1 em { color: var(--blue); font-style: italic; }
   .note-modal { padding: 31px 24px; }
   .note-modal h2 { font-size: 31px; }
 }
+
+.article-shell { min-height: 100vh; }
+.article-content { width: min(850px, calc(100% - 64px)); margin: 0 auto; padding: 78px 0 110px; }
+.article-topline { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 25px; color: var(--faint); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+.article-topline a, .article-footer a { color: var(--blue); transition: opacity .2s; }
+.article-topline a:hover, .article-footer a:hover { opacity: .7; }
+.article-card { padding: 55px clamp(25px, 7vw, 78px) 48px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface); backdrop-filter: blur(20px); }
+.article-header h1 { max-width: 700px; margin: 19px 0 24px; font-size: clamp(48px, 6vw, 78px); letter-spacing: -.07em; line-height: .95; }
+.article-excerpt { max-width: 610px; margin-bottom: 26px; color: var(--muted); font-size: 15px; line-height: 1.85; }
+.article-divider { height: 1px; margin: 35px 0 39px; background: var(--line); }
+.article-body { max-width: 650px; color: var(--muted); }
+.article-body section { margin-bottom: 40px; }
+.article-body h2 { margin-bottom: 15px; color: var(--ink); font-family: Georgia, serif; font-size: 25px; font-weight: 400; letter-spacing: -.04em; }
+.article-body p { margin-bottom: 14px; font-size: 15px; line-height: 2; }
+.article-body blockquote { margin: 25px 0 0; padding: 9px 0 9px 20px; border-left: 2px solid var(--blue); color: var(--blue); font-family: Georgia, serif; font-size: 18px; font-style: italic; line-height: 1.65; }
+.article-footer { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding-top: 30px; border-top: 1px solid var(--line); color: var(--faint); font-size: 10px; letter-spacing: .11em; text-transform: uppercase; }
+
+@media (max-width: 640px) {
+  .article-content { width: min(100% - 36px, 850px); padding: 50px 0 70px; }
+  .article-topline { align-items: start; flex-direction: column; gap: 11px; }
+  .article-card { padding: 34px 22px 30px; }
+  .article-header h1 { font-size: 47px; }
+  .article-excerpt, .article-body p { font-size: 14px; }
+  .article-footer { align-items: start; flex-direction: column; }
+}

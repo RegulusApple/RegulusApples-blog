@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 type Category = '学习' | '项目' | '读书' | '生活' | '随笔' | '技术';
 
 type Post = {
+  slug: string;
   title: string;
   excerpt: string;
   category: Category;
@@ -16,6 +17,7 @@ type Post = {
 
 const posts: Post[] = [
   {
+    slug: 'learning-as-a-reviewable-system',
     title: '把学习变成可回看的系统',
     excerpt: '从一次次零散的搜索、实验与复盘开始，慢慢搭出属于自己的知识地图。',
     category: '学习',
@@ -25,6 +27,7 @@ const posts: Post[] = [
     accent: 'blue',
   },
   {
+    slug: 'a-small-project-review',
     title: '一个小项目的拆解与复盘',
     excerpt: '项目真正有价值的部分，往往不只是最后交付的结果，也包括中途做过的判断。',
     category: '项目',
@@ -34,6 +37,7 @@ const posts: Post[] = [
     accent: 'violet',
   },
   {
+    slug: 'reading-clear-minded-in-change',
     title: '读书摘记：在变化里保持清醒',
     excerpt: '有些书不会立刻给出答案，但会帮我们换一个角度，重新看见问题。',
     category: '读书',
@@ -43,6 +47,7 @@ const posts: Post[] = [
     accent: 'rose',
   },
   {
+    slug: 'a-note-to-my-future-self',
     title: '给未来自己的生活备忘',
     excerpt: '关于一些微小但重要的事：慢一点、走出去、保留好奇心。',
     category: '生活',
@@ -52,6 +57,7 @@ const posts: Post[] = [
     accent: 'amber',
   },
   {
+    slug: 'record-memory-reinvention',
     title: '记录、记忆与重新发明',
     excerpt: '写下来的瞬间，既是在保存过去，也是在给未来留下重新理解自己的入口。',
     category: '随笔',
@@ -61,6 +67,7 @@ const posts: Post[] = [
     accent: 'green',
   },
   {
+    slug: 'tools-for-the-things-that-matter',
     title: '让工具服务于真正想做的事',
     excerpt: '技术不是终点。把复杂的工具变得顺手，是为了把更多注意力留给问题本身。',
     category: '技术',
@@ -84,7 +91,6 @@ export default function Home() {
   const [activeCategory, setActiveCategory] = useState<'全部' | Category>('全部');
   const [query, setQuery] = useState('');
   const [isLight, setIsLight] = useState(false);
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
   const filteredPosts = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -213,9 +219,9 @@ export default function Home() {
                     <div className="tag-list">
                       {post.tags.map((tag) => <span key={tag}>#{tag}</span>)}
                     </div>
-                    <button className="read-link" type="button" onClick={() => setSelectedPost(post)}>
+                    <a className="read-link" href={`/notes/${post.slug}`}>
                       Read note <span>↗</span>
-                    </button>
+                    </a>
                   </div>
                 </article>
               ))}
@@ -293,19 +299,6 @@ export default function Home() {
         <a href="#top">Back to top ↑</a>
       </footer>
 
-      {selectedPost && (
-        <div className="modal-backdrop" role="presentation" onClick={() => setSelectedPost(null)}>
-          <section className="note-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" onClick={(event) => event.stopPropagation()}>
-            <button className="modal-close" type="button" aria-label="关闭文章预览" onClick={() => setSelectedPost(null)}>×</button>
-            <p className="section-kicker">{selectedPost.category} · {selectedPost.date}</p>
-            <h2 id="modal-title">{selectedPost.title}</h2>
-            <p className="modal-lead">{selectedPost.excerpt}</p>
-            <div className="modal-divider" />
-            <p>这是一个预览入口。之后可以把这里替换成真正的 Markdown 文章详情页，继续保留现在的目录、标签与阅读体验。</p>
-            <div className="tag-list">{selectedPost.tags.map((tag) => <span key={tag}>#{tag}</span>)}</div>
-          </section>
-        </div>
-      )}
     </div>
   );
 }
