@@ -96,15 +96,14 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
 
   return (
     <div className="site-shell article-shell">
-      <header className="topbar">
-        <Link className="brand" href="/" aria-label="回到 Halfold's Blog 首页">
-          <span className="brand-mark">H</span>
-          <span className="brand-copy">
-            <strong>Halfold’s Blog</strong>
-            <span>Personal archive · 01</span>
-          </span>
-        </Link>
-        <Link className="small-button" href="/">Back to notes</Link>
+      <header className="global-bar">
+        <div className="global-bar-inner">
+          <Link className="brand" href="/" aria-label="回到 Halfold's Blog 首页">
+            <span className="brand-mark">H</span>
+            <span className="brand-copy"><strong>Halfold’s Blog</strong></span>
+          </Link>
+          <Link className="small-button" href="/">返回文章</Link>
+        </div>
       </header>
 
       <main className="article-content">
