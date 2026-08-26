@@ -1,5 +1,8 @@
+/* Full document navigation keeps the detail-page return flow reliable in the hosted Vinext runtime. */
+/* eslint-disable @next/next/no-html-link-for-pages */
+
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
+import type { Metadata } from 'next';
 
 const articles = {
   'learning-as-a-reviewable-system': {
@@ -84,6 +87,18 @@ const articles = {
 
 type Slug = keyof typeof articles;
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  if (!(slug in articles)) return {};
+  const article = articles[slug as Slug];
+  return {
+    title: `${article.title} · Halfold’s Blog`,
+    description: article.excerpt,
+    openGraph: { title: article.title, description: article.excerpt, type: 'article', images: ['/og.png'] },
+    twitter: { card: 'summary_large_image', title: article.title, description: article.excerpt, images: ['/og.png'] },
+  };
+}
+
 export function generateStaticParams() {
   return Object.keys(articles).map((slug) => ({ slug }));
 }
@@ -98,41 +113,58 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
     <div className="site-shell article-shell">
       <header className="global-bar">
         <div className="global-bar-inner">
-          <Link className="brand" href="/" aria-label="回到 Halfold's Blog 首页">
+          <a className="brand" href="/" aria-label="回到 Halfold's Blog 首页">
             <span className="brand-mark">H</span>
             <span className="brand-copy"><strong>Halfold’s Blog</strong></span>
-          </Link>
-          <Link className="small-button" href="/">返回文章</Link>
+          </a>
+          <a className="small-button" href="/">返回文章</a>
         </div>
       </header>
 
       <main className="article-content">
         <div className="article-topline">
-          <Link href="/">← Recent notes</Link>
+          <a href="/">← Recent notes</a>
           <span>{article.category} · {article.readingTime}</span>
         </div>
-        <article className="article-card">
-          <header className="article-header">
-            <p className="section-kicker">{article.date} · field note</p>
-            <h1>{article.title}</h1>
-            <p className="article-excerpt">{article.excerpt}</p>
-            <div className="tag-list">{article.tags.map((tag) => <span key={tag}>#{tag}</span>)}</div>
-          </header>
-          <div className="article-divider" />
-          <div className="article-body">
-            {article.sections.map((section) => (
-              <section key={section.title}>
-                <h2>{section.title}</h2>
-                {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-                {'quote' in section && section.quote && <blockquote>{section.quote}</blockquote>}
-              </section>
-            ))}
-          </div>
-          <footer className="article-footer">
-            <Link href="/">← Back to all notes</Link>
-            <span>Written by Halfold</span>
-          </footer>
-        </article>
+        <div className="article-layout">
+          <article className="article-card">
+            <header className="article-header">
+              <p className="section-kicker">{article.date} · field note</p>
+              <h1>{article.title}</h1>
+              <p className="article-excerpt">{article.excerpt}</p>
+              <div className="tag-list">{article.tags.map((tag) => <span key={tag}>#{tag}</span>)}</div>
+            </header>
+            <div className="article-divider" />
+            <div className="article-body">
+              {article.sections.map((section, index) => (
+                <section id={`section-${index + 1}`} key={section.title}>
+                  <h2>{section.title}</h2>
+                  {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                  {'quote' in section && section.quote && <blockquote>{section.quote}</blockquote>}
+                </section>
+              ))}
+            </div>
+            <footer className="article-footer">
+              <a href="/">← 返回全部文章</a>
+              <span>Written by Halfold</span>
+            </footer>
+          </article>
+
+          <aside className="article-aside">
+            <section className="article-aside-card">
+              <p className="aside-kicker">目录</p>
+              <nav className="article-toc" aria-label="文章目录">
+                {article.sections.map((section, index) => <a href={`#section-${index + 1}`} key={section.title}><span>0{index + 1}</span>{section.title}</a>)}
+              </nav>
+            </section>
+            <section className="article-aside-card article-aside-note">
+              <p className="aside-kicker">A note to self</p>
+              <p>写下来的瞬间，是以后可以重新回去的地方。</p>
+              <span>Record · Remember · Reinvent</span>
+            </section>
+            <a className="article-next" href="/">查看更多文章 <span>↗</span></a>
+          </aside>
+        </div>
       </main>
     </div>
   );
