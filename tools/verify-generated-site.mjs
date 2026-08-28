@@ -36,7 +36,7 @@ if (!searchPage.includes('data-search-page') || !Array.isArray(searchIndex) || s
   throw new Error('Generated local search page or index is missing.');
 }
 
-for (const marker of ['theme-toggle', 'manifest.webmanifest', 'href="/stats/"']) {
+for (const marker of ['theme-toggle', 'manifest.webmanifest', 'href="/stats/"', 'href="/reading/"']) {
   if (!homepage.includes(marker)) {
     throw new Error(`Generated homepage is missing second-phase feature marker: ${marker}`);
   }
@@ -81,5 +81,10 @@ if (manifest.display !== 'standalone' || manifest.start_url !== '/') {
 await access('public/css/katex.min.css');
 await access('public/css/fonts/KaTeX_Main-Regular.woff2');
 await access('public/sw.js');
+
+const serviceWorker = await readFile('public/sw.js', 'utf8');
+if (!serviceWorker.includes("halfold-blog-v2") || !serviceWorker.includes('event.request.mode === \'navigate\'')) {
+  throw new Error('Generated service worker is missing the cache refresh strategy.');
+}
 
 console.log('Generated site encoding, shell, search, math, article, PWA, statistics, and interaction checks passed.');
