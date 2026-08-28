@@ -31,6 +31,23 @@ highlight:
 prismjs:
   enable: false
 
+markdown:
+  preset: default
+  render:
+    html: true
+    breaks: false
+    linkify: true
+    typographer: true
+  plugins:
+    - '@renbaoshuo/markdown-it-katex'
+  images:
+    lazyload: true
+
+search:
+  path: search.json
+  field: post
+  content: true
+
 index_generator:
   path: ''
   per_page: 10

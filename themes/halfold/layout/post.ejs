@@ -1,4 +1,7 @@
 <article class="article-page">
+  <% const articleText = String(page.content || '').replace(/<[^>]*>/g, ' ').replace(/&[^;]+;/g, ' ').replace(/\s+/g, ' ').trim(); %>
+  <% const wordCount = articleText.replace(/\s/g, '').length; %>
+  <% const readingMinutes = Math.max(1, Math.ceil(wordCount / 420)); %>
   <div class="article-topline"><a href="<%- url_for('/') %>">← 回到文章列表</a><span><%= page.date.format('YYYY.MM.DD') %> · <%= page.categories && page.categories.length ? page.categories.first().name : '记录' %></span></div>
   <div class="article-layout">
     <main class="article-card">
@@ -9,9 +12,9 @@
         <div class="tag-list">
           <% if (page.tags) { page.tags.each(function (tag) { %><a href="<%- url_for('/tags/' + tag.name + '/') %>">#<%= tag.name %></a><% }); } %>
         </div>
-        <div class="article-stats"><span>发布于 <%= page.date.format('YYYY-MM-DD') %></span><span>阅读约 <%= Math.max(1, Math.ceil((page.content || '').replace(/<[^>]+>/g, '').length / 420)) %> 分钟</span></div>
+        <div class="article-stats"><span>发布于 <%= page.date.format('YYYY-MM-DD') %></span><span>阅读约 <%= readingMinutes %> 分钟</span><span>约 <%= wordCount %> 字</span><% if (page.updated && page.updated.valueOf() !== page.date.valueOf()) { %><span>更新于 <%= page.updated.format('YYYY-MM-DD') %></span><% } %></div>
       </header>
-      <% if (page.cover) { %><img class="article-cover" src="<%- url_for(page.cover) %>" alt="<%= page.title %> 封面"> <% } %>
+      <% if (page.cover) { %><img class="article-cover" loading="lazy" decoding="async" src="<%- url_for(page.cover) %>" alt="<%= page.title %> 封面"> <% } %>
       <div class="article-body"><%- page.content %></div>
       <footer class="article-footer"><a href="<%- url_for('/') %>">← 返回全部文章</a><span>Written by Halfold</span></footer>
     </main>

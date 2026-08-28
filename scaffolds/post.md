@@ -2,7 +2,8 @@
 title: {{ title }}
 date: {{ date }}
 updated: {{ date }}
-category: 学习
+categories:
+  - 学习
 tags:
   - 记录
 description: 
