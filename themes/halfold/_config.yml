@@ -2,6 +2,7 @@ menu:
   文章: /
   归档: /archives/
   搜索: /search/
+  统计: /stats/
   关于: /about/
 
 profile:
@@ -17,6 +18,16 @@ hero:
   description: Record，Remember，Reinvent，Revolutionize。把学习、项目、读书与生活，慢慢放进一个可以回看的地方。
   image: /images/whitesmith.jpg
   image_label: WHITESMITH · 01
+
+comments:
+  enabled: false
+  provider: giscus
+  repo: ''
+  repo_id: ''
+  category: ''
+  category_id: ''
+  mapping: pathname
+  lang: zh-CN
 
 categories:
   - 学习

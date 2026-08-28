@@ -1,0 +1,14 @@
+<section class="content-section album-page">
+  <div class="section-heading">
+    <div><p class="eyebrow">memory / album</p><h1>把生活<br><em>收进相册。</em></h1></div>
+    <span><%= theme.memory.length %> 个片段</span>
+  </div>
+  <div class="album-grid">
+    <% theme.memory.forEach(function (memory, index) { %>
+      <a class="album-card" href="<%- url_for(memory.image) %>" data-lightbox="<%= memory.title %>">
+        <img loading="lazy" decoding="async" src="<%- url_for(memory.image) %>" alt="<%= memory.title %>">
+        <span><b>0<%= index + 1 %></b><%= memory.title %></span>
+      </a>
+    <% }); %>
+  </div>
+</section>

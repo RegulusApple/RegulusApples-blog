@@ -1,0 +1,19 @@
+{
+  "name": "Halfold's Blog",
+  "short_name": "Halfold",
+  "description": "记录学习、项目、读书与生活的个人博客。",
+  "lang": "zh-CN",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fbfaf4",
+  "theme_color": "#4d377c",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

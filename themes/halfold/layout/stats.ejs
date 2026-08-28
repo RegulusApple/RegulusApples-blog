@@ -1,0 +1,65 @@
+<%
+  const posts = [];
+  const categoryCounts = {};
+  const tagCounts = {};
+  const yearCounts = {};
+  const wordCount = function (post) {
+    return String(post.content || '').replace(/<[^>]*>/g, '').replace(/\s/g, '').length;
+  };
+  site.posts.each(function (post) {
+    posts.push(post);
+    const year = post.date.format('YYYY');
+    yearCounts[year] = (yearCounts[year] || 0) + 1;
+    if (post.categories) post.categories.each(function (category) {
+      categoryCounts[category.name] = (categoryCounts[category.name] || 0) + 1;
+    });
+    if (post.tags) post.tags.each(function (tag) {
+      tagCounts[tag.name] = (tagCounts[tag.name] || 0) + 1;
+    });
+  });
+  const sortCounts = function (counts) {
+    return Object.entries(counts).sort(function (a, b) { return b[1] - a[1] || a[0].localeCompare(b[0]); });
+  };
+  const categories = sortCounts(categoryCounts);
+  const tags = sortCounts(tagCounts);
+  const years = sortCounts(yearCounts).sort(function (a, b) { return b[0].localeCompare(a[0]); });
+  const maxCategory = categories.length ? categories[0][1] : 1;
+  const maxYear = years.length ? Math.max.apply(null, years.map(function (item) { return item[1]; })) : 1;
+  const totalWords = posts.reduce(function (sum, post) { return sum + wordCount(post); }, 0);
+%>
+<section class="content-section stats-page">
+  <div class="section-heading">
+    <div><p class="eyebrow">site / statistics</p><h1>让记录<br><em>看得见。</em></h1></div>
+    <span>持续更新中</span>
+  </div>
+  <div class="stats-overview">
+    <div class="stat-card"><small>文章</small><strong><%= posts.length %></strong><span>篇记录</span></div>
+    <div class="stat-card"><small>分类</small><strong><%= categories.length %></strong><span>个方向</span></div>
+    <div class="stat-card"><small>标签</small><strong><%= tags.length %></strong><span>个关键词</span></div>
+    <div class="stat-card"><small>字数</small><strong><%= totalWords %></strong><span>字左右</span></div>
+  </div>
+  <div class="stats-columns">
+    <section class="stats-card">
+      <div class="stats-card-heading"><p class="eyebrow">by category</p><span>分类分布</span></div>
+      <div class="bar-list">
+        <% categories.forEach(function (item) { %>
+          <div class="bar-row"><div><b><%= item[0] %></b><span><%= item[1] %> 篇</span></div><div class="bar-track"><i style="width: <%= Math.max(12, Math.round(item[1] / maxCategory * 100)) %>%"></i></div></div>
+        <% }); %>
+      </div>
+    </section>
+    <section class="stats-card">
+      <div class="stats-card-heading"><p class="eyebrow">by year</p><span>年度记录</span></div>
+      <div class="year-chart">
+        <% years.forEach(function (item) { %>
+          <div class="year-column"><span><%= item[1] %></span><i style="height: <%= Math.max(18, Math.round(item[1] / maxYear * 100)) %>%"></i><b><%= item[0] %></b></div>
+        <% }); %>
+      </div>
+    </section>
+  </div>
+  <section class="stats-card tag-cloud-card">
+    <div class="stats-card-heading"><p class="eyebrow">recurring words</p><span>常出现的词</span></div>
+    <div class="tag-cloud">
+      <% tags.forEach(function (item) { %><a href="<%- url_for('/tags/' + item[0] + '/') %>" style="--tag-size: <%= Math.min(1.5, 1 + item[1] / 8) %>em">#<%= item[0] %> <small><%= item[1] %></small></a><% }); %>
+    </div>
+  </section>
+</section>

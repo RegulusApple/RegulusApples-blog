@@ -15,6 +15,27 @@
     return stripHtml(value).toLocaleLowerCase();
   }
 
+  var themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    var setTheme = function (theme) {
+      var isDark = theme === 'dark';
+      document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
+      themeToggle.setAttribute('aria-pressed', String(isDark));
+      themeToggle.setAttribute('aria-label', isDark ? '切换到浅色模式' : '切换到深色模式');
+      themeToggle.title = isDark ? '切换到浅色模式' : '切换到深色模式';
+      themeToggle.querySelector('span').textContent = isDark ? '☾' : '☼';
+      themeToggle.querySelector('b').textContent = isDark ? '深色' : '浅色';
+      var themeColor = document.querySelector('meta[name="theme-color"]');
+      if (themeColor) themeColor.setAttribute('content', isDark ? '#211b35' : '#fbfaf4');
+    };
+    setTheme(document.documentElement.dataset.theme || 'light');
+    themeToggle.addEventListener('click', function () {
+      var nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      try { localStorage.setItem('halfold-theme', nextTheme); } catch (error) {}
+      setTheme(nextTheme);
+    });
+  }
+
   var articleBody = document.querySelector('.article-body');
   var toc = document.getElementById('article-toc');
 
@@ -137,5 +158,70 @@
       .catch(function () {
         status.textContent = '搜索索引暂时不可用，请稍后再试。';
       });
+  }
+
+  var lightboxItems = document.querySelectorAll('[data-lightbox]');
+  if (lightboxItems.length) {
+    var lightbox = document.createElement('div');
+    lightbox.className = 'lightbox';
+    lightbox.setAttribute('role', 'dialog');
+    lightbox.setAttribute('aria-modal', 'true');
+    lightbox.setAttribute('aria-label', '图片预览');
+    lightbox.innerHTML = '<button class="lightbox-close" type="button" aria-label="关闭图片预览">×</button><figure><img alt=""><figcaption></figcaption></figure>';
+    document.body.appendChild(lightbox);
+    var lightboxImage = lightbox.querySelector('img');
+    var lightboxCaption = lightbox.querySelector('figcaption');
+    var closeLightbox = function () {
+      lightbox.classList.remove('is-open');
+      document.body.classList.remove('lightbox-open');
+    };
+    lightbox.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', function (event) {
+      if (event.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') closeLightbox();
+    });
+    lightboxItems.forEach(function (item) {
+      item.addEventListener('click', function (event) {
+        event.preventDefault();
+        lightboxImage.src = item.getAttribute('href');
+        lightboxImage.alt = item.querySelector('img').alt;
+        lightboxCaption.textContent = item.getAttribute('data-lightbox') || '';
+        lightbox.classList.add('is-open');
+        document.body.classList.add('lightbox-open');
+      });
+    });
+  }
+
+  var comments = document.querySelector('[data-comments]');
+  if (comments && comments.dataset.provider === 'giscus') {
+    var requiredGiscusFields = ['repo', 'repoId', 'category', 'categoryId'];
+    var giscusReady = requiredGiscusFields.every(function (field) { return comments.dataset[field]; });
+    var commentMount = comments.querySelector('.comment-mount');
+    if (giscusReady && commentMount) {
+      commentMount.innerHTML = '';
+      var giscusScript = document.createElement('script');
+      giscusScript.src = 'https://giscus.app/client.js';
+      giscusScript.async = true;
+      giscusScript.crossOrigin = 'anonymous';
+      giscusScript.setAttribute('data-repo', comments.dataset.repo);
+      giscusScript.setAttribute('data-repo-id', comments.dataset.repoId);
+      giscusScript.setAttribute('data-category', comments.dataset.category);
+      giscusScript.setAttribute('data-category-id', comments.dataset.categoryId);
+      giscusScript.setAttribute('data-mapping', comments.dataset.mapping || 'pathname');
+      giscusScript.setAttribute('data-reactions-enabled', '1');
+      giscusScript.setAttribute('data-emit-metadata', '0');
+      giscusScript.setAttribute('data-input-position', 'top');
+      giscusScript.setAttribute('data-theme', 'light');
+      giscusScript.setAttribute('data-lang', comments.dataset.lang || 'zh-CN');
+      commentMount.appendChild(giscusScript);
+    }
+  }
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function () {});
+    });
   }
 })();
