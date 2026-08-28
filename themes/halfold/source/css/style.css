@@ -102,9 +102,9 @@ button { cursor: pointer; }
 .primary-button { align-self: flex-start; margin-top: 28px; padding: 14px 19px; color: white; background: var(--purple); border-radius: 13px; box-shadow: 0 12px 20px rgba(77, 55, 124, .19); font-size: 12px; font-weight: 800; transition: transform .2s ease, background .2s ease; }
 .primary-button span { margin-left: 18px; font-size: 16px; }
 .primary-button:hover, .primary-button:focus-visible { background: var(--purple-soft); transform: translateY(-3px); }
-.welcome-art { position: relative; min-height: 400px; background: #fff; overflow: hidden; }
-.welcome-art::before { content: ''; position: absolute; inset: 32px; border: 1px dashed rgba(77, 55, 124, .25); border-radius: 20px; }
-.welcome-art img { width: 100%; height: 100%; min-height: 400px; display: block; object-fit: cover; object-position: center 20%; }
+.welcome-art { position: relative; min-height: 400px; padding: 32px; background: linear-gradient(135deg, #4d377c 0%, #7561a8 38%, #ffffff 88%); overflow: hidden; }
+.welcome-art-frame { position: relative; min-height: 336px; height: 100%; overflow: hidden; border: 1px dashed rgba(77, 55, 124, .25); border-radius: 20px; background: #fff; }
+.welcome-art img { width: 100%; height: 100%; min-height: 336px; display: block; object-fit: cover; object-position: center 20%; }
 .welcome-art span { position: absolute; right: 28px; bottom: 22px; color: var(--purple); font-size: 10px; letter-spacing: .14em; }
 
 .content-section, .memory-section { margin-top: 46px; padding: 34px 38px; }
@@ -221,9 +221,8 @@ button { cursor: pointer; }
   .welcome-panel { grid-template-columns: 1fr; min-height: auto; }
   .welcome-copy { padding: 38px 26px; }
   .welcome-copy h1 { font-size: 58px; }
-  .welcome-art { min-height: 280px; }
-  .welcome-art img { min-height: 280px; }
-  .welcome-art::before { inset: 20px; }
+  .welcome-art { min-height: 280px; padding: 20px; }
+  .welcome-art-frame, .welcome-art img { min-height: 240px; }
   .content-section, .memory-section { padding: 25px 20px; margin-top: 28px; }
   .section-heading h1, .section-heading h2 { font-size: 36px; }
   .section-heading > span { font-size: 10px; }

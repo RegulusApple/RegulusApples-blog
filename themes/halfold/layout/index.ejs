@@ -11,8 +11,10 @@
     <a class="primary-button" href="#recent-notes">阅读最近文章 <span>↗</span></a>
   </div>
   <div class="welcome-art">
-    <img src="<%- url_for(theme.hero.image) %>" alt="Whitesmith 插画">
-    <span><%= theme.hero.image_label %></span>
+    <div class="welcome-art-frame">
+      <img src="<%- url_for(theme.hero.image) %>" alt="Whitesmith 插画">
+      <span><%= theme.hero.image_label %></span>
+    </div>
   </div>
 </section>
 
