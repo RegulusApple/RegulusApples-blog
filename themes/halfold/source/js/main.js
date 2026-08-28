@@ -27,6 +27,7 @@
       themeToggle.querySelector('b').textContent = isDark ? '深色' : '浅色';
       var themeColor = document.querySelector('meta[name="theme-color"]');
       if (themeColor) themeColor.setAttribute('content', isDark ? '#211b35' : '#fbfaf4');
+      document.dispatchEvent(new CustomEvent('halfold:theme-change', { detail: { theme: isDark ? 'dark' : 'light' } }));
     };
     setTheme(document.documentElement.dataset.theme || 'light');
     themeToggle.addEventListener('click', function () {
@@ -213,10 +214,44 @@
       giscusScript.setAttribute('data-reactions-enabled', '1');
       giscusScript.setAttribute('data-emit-metadata', '0');
       giscusScript.setAttribute('data-input-position', 'top');
-      giscusScript.setAttribute('data-theme', 'light');
+      giscusScript.setAttribute('data-theme', document.documentElement.dataset.theme === 'dark' ? 'dark_dimmed' : 'light');
       giscusScript.setAttribute('data-lang', comments.dataset.lang || 'zh-CN');
       commentMount.appendChild(giscusScript);
     }
+    document.addEventListener('halfold:theme-change', function (event) {
+      var frame = document.querySelector('iframe.giscus-frame');
+      if (frame && frame.contentWindow) {
+        frame.contentWindow.postMessage({ giscus: { setConfig: { theme: event.detail.theme === 'dark' ? 'dark_dimmed' : 'light' } } }, 'https://giscus.app');
+      }
+    });
+  }
+
+  var musicPlayer = document.querySelector('[data-music-player]');
+  if (musicPlayer) {
+    var audio = document.getElementById('music-audio');
+    var trackRows = Array.from(musicPlayer.querySelectorAll('[data-track]'));
+    var currentTitle = document.getElementById('music-current-title');
+    var currentArtist = document.getElementById('music-current-artist');
+    var selectTrack = function (row, shouldPlay) {
+      trackRows.forEach(function (track) {
+        track.classList.toggle('is-active', track === row);
+        track.setAttribute('aria-pressed', String(track === row));
+      });
+      currentTitle.textContent = row.dataset.title;
+      currentArtist.textContent = row.dataset.audio ? row.dataset.artist : row.dataset.artist + ' · 音频地址待接入';
+      if (row.dataset.audio) {
+        audio.src = row.dataset.audio;
+        if (shouldPlay) audio.play().catch(function () {});
+      }
+    };
+    trackRows.forEach(function (row) {
+      row.addEventListener('click', function () { selectTrack(row, true); });
+    });
+    audio.addEventListener('ended', function () {
+      var currentIndex = trackRows.indexOf(musicPlayer.querySelector('.track-row.is-active'));
+      var next = trackRows[(currentIndex + 1) % trackRows.length];
+      if (next) selectTrack(next, true);
+    });
   }
 
   if ('serviceWorker' in navigator) {

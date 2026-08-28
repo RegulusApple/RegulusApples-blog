@@ -1,0 +1,15 @@
+<section class="content-section reading-page">
+  <div class="section-heading">
+    <div><p class="eyebrow">memory / reading</p><h1>给书一个位置<br><em>也给自己一个。</em></h1></div>
+    <span><%= (theme.reading.shelf || []).length %> 本记录</span>
+  </div>
+  <div class="reading-grid">
+    <% (theme.reading.shelf || []).forEach(function (book, index) { %>
+      <article class="book-card">
+        <img loading="lazy" decoding="async" src="<%- url_for(book.cover || theme.profile.avatar) %>" alt="<%= book.title %> 封面">
+        <div class="book-copy"><span class="book-number">0<%= index + 1 %></span><b><%= book.title %></b><small><%= book.author %></small><em><%= book.status %></em><p><%= book.note %></p><% if (book.link) { %><a href="<%= book.link %>" target="_blank" rel="noreferrer">打开书目来源 →</a><% } %></div>
+      </article>
+    <% }); %>
+  </div>
+  <p class="reading-hint">当前读书架是手动维护的。以后接入豆瓣或其他书目服务时，只需把书目数据替换为接口返回结果。</p>
+</section>

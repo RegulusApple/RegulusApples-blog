@@ -29,6 +29,48 @@ comments:
   mapping: pathname
   lang: zh-CN
 
+analytics:
+  enabled: false
+  provider: umami
+  script_url: ''
+  website_id: ''
+  measurement_id: ''
+
+music:
+  provider: manual
+  playlist:
+    - title: A quiet morning
+      artist: Halfold's playlist
+      year: 2026
+      cover: /images/reading.png
+      audio: ''
+    - title: Still, moving
+      artist: Halfold's playlist
+      year: 2026
+      cover: /images/cycling.png
+      audio: ''
+    - title: After the rain
+      artist: Halfold's playlist
+      year: 2026
+      cover: /images/coast.png
+      audio: ''
+
+reading:
+  provider: manual
+  shelf:
+    - title: 留白与自我整理
+      author: 待读书目
+      status: 想读
+      note: 先把问题放在身边，答案可以慢一点抵达。
+      cover: /images/reading.png
+      link: ''
+    - title: 在变化里保持清醒
+      author: Halfold's notes
+      status: 在读
+      note: 读几页，停下来想一想，再把一句话带回生活。
+      cover: /images/coast.png
+      link: ''
+
 categories:
   - 学习
   - 项目

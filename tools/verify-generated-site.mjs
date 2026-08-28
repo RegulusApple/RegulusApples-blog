@@ -15,6 +15,9 @@ const searchPage = await readFile('public/search/index.html', 'utf8');
 const searchIndex = JSON.parse(await readFile('public/search.json', 'utf8'));
 const statsPage = await readFile('public/stats/index.html', 'utf8');
 const messagePage = await readFile('public/message/index.html', 'utf8');
+const musicPage = await readFile('public/music/index.html', 'utf8');
+const readingPage = await readFile('public/reading/index.html', 'utf8');
+const generatedScript = await readFile('public/js/main.js', 'utf8');
 const manifest = JSON.parse(await readFile('public/manifest.webmanifest', 'utf8'));
 
 for (const marker of ['background: #fff', '.search-form', '.article-body .highlight']) {
@@ -47,6 +50,28 @@ for (const marker of ['related-card', 'article-comments', 'comments-placeholder'
 
 if (!statsPage.includes('year-chart') || !messagePage.includes('留言板已经准备好了')) {
   throw new Error('Generated statistics or message page is missing.');
+}
+
+for (const marker of ['music-audio', 'playlist', 'data-music-player']) {
+  if (!musicPage.includes(marker)) {
+    throw new Error(`Generated music page is missing third-phase feature marker: ${marker}`);
+  }
+}
+
+for (const marker of ['reading-grid', 'book-card', '读书架']) {
+  if (!readingPage.includes(marker)) {
+    throw new Error(`Generated reading page is missing third-phase feature marker: ${marker}`);
+  }
+}
+
+for (const marker of ['giscus.app/client.js', 'data-music-player', 'serviceWorker.register']) {
+  if (!generatedScript.includes(marker)) {
+    throw new Error(`Generated interaction script is missing third-phase feature marker: ${marker}`);
+  }
+}
+
+if (homepage.includes('googletagmanager.com/gtag/js') || homepage.includes('data-website-id=')) {
+  throw new Error('Analytics scripts must stay disabled until the user supplies an analytics identifier.');
 }
 
 if (manifest.display !== 'standalone' || manifest.start_url !== '/') {

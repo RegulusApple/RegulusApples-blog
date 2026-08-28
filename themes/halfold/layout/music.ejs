@@ -1,0 +1,24 @@
+<section class="content-section music-page">
+  <div class="section-heading">
+    <div><p class="eyebrow">memory / music</p><h1>让声音<br><em>陪我走一段。</em></h1></div>
+    <span><%= (theme.music.playlist || []).length %> 首记录</span>
+  </div>
+  <div class="music-player" data-music-player>
+    <div class="music-now-playing">
+      <div class="music-disc" aria-hidden="true">♪</div>
+      <div><p class="eyebrow">now / selected</p><h2 id="music-current-title">选择一首歌</h2><p id="music-current-artist">这里可以接入本地音频或你的音乐服务。</p></div>
+    </div>
+    <audio id="music-audio" controls preload="metadata" aria-label="音乐播放器"></audio>
+    <div class="playlist" aria-label="播放列表">
+      <% (theme.music.playlist || []).forEach(function (track, index) { %>
+        <button class="track-row" type="button" data-track data-title="<%= track.title %>" data-artist="<%= track.artist %>" data-audio="<%= track.audio || '' %>">
+          <span class="track-number">0<%= index + 1 %></span>
+          <img loading="lazy" decoding="async" src="<%- url_for(track.cover || theme.profile.avatar) %>" alt="">
+          <span class="track-copy"><b><%= track.title %></b><small><%= track.artist %> · <%= track.year %></small></span>
+          <span class="track-state"><%= track.audio ? '播放' : '待接入' %></span>
+        </button>
+      <% }); %>
+    </div>
+    <p class="music-hint">音乐地址可以直接写入主题配置的 <code>audio</code> 字段；如果使用外部歌单，则把这里作为歌单入口即可。</p>
+  </div>
+</section>

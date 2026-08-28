@@ -1,4 +1,5 @@
 <% const pageTitle = page.title ? `${page.title} · ${config.title}` : config.title; %>
+<% const analytics = theme.analytics || {}; %>
 <!doctype html>
 <html lang="<%= config.language || 'zh-CN' %>">
   <head>
@@ -57,5 +58,11 @@
       </footer>
     </div>
     <script src="<%- url_for('/js/main.js') %>" defer></script>
+    <% if (analytics.enabled && analytics.provider === 'umami' && analytics.script_url && analytics.website_id) { %>
+      <script async src="<%= analytics.script_url %>" data-website-id="<%= analytics.website_id %>"></script>
+    <% } else if (analytics.enabled && analytics.provider === 'google-analytics' && analytics.measurement_id) { %>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=<%= analytics.measurement_id %>"></script>
+      <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','<%= analytics.measurement_id %>');</script>
+    <% } %>
   </body>
 </html>
