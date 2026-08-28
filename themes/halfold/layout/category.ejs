@@ -1,0 +1,9 @@
+<section class="content-section taxonomy-page">
+  <div class="section-heading"><div><p class="eyebrow">article / category</p><h1><%= page.category %><br><em>这一方向的记录。</em></h1></div><span><%= page.posts.length %> 篇文章</span></div>
+  <div class="post-list">
+    <% page.posts.each(function (post, index) { %>
+      <article class="post-row"><span class="post-number"><%= String(index + 1).padStart(2, '0') %></span><div class="post-row-main"><p class="post-meta"><span><%= page.category %></span><span><%= post.date.format('YYYY.MM.DD') %></span></p><h3><a href="<%- url_for(post.path) %>"><%= post.title %></a></h3><p><%= post.description || post.excerpt %></p></div><a class="row-arrow" href="<%- url_for(post.path) %>">↗</a></article>
+    <% }); %>
+  </div>
+  <%- partial('_partial/pagination', { page: page }) %>
+</section>

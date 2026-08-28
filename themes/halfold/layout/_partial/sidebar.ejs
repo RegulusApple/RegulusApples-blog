@@ -1,0 +1,36 @@
+<aside class="site-sidebar" aria-label="博客功能分区">
+  <section class="profile-card">
+    <div class="profile-index"><span>01</span><span>MYSELF</span></div>
+    <div class="profile-person">
+      <img src="<%- url_for(theme.profile.avatar) %>" alt="Halfold 的头像">
+      <div><strong><%= theme.profile.name %></strong><span><%= theme.profile.role %></span></div>
+    </div>
+    <p><%= theme.profile.intro %></p>
+  </section>
+
+  <nav class="side-nav">
+    <div class="side-group">
+      <h2>文章</h2>
+      <a href="<%- url_for('/') %>">全部文章</a>
+      <a href="<%- url_for('/archives/') %>">归档</a>
+      <a href="<%- url_for('/categories/') %>">分类</a>
+      <a href="<%- url_for('/tags/') %>">标签</a>
+    </div>
+    <div class="side-group">
+      <h2>记忆</h2>
+      <a href="<%- url_for('/album/') %>">相册</a>
+      <a href="<%- url_for('/music/') %>">音乐</a>
+    </div>
+    <div class="side-group">
+      <h2>关于</h2>
+      <a href="<%- url_for('/about/') %>">关于我</a>
+      <a href="<%- url_for('/links/') %>">友情链接</a>
+      <a href="<%- url_for('/sitetime/') %>">站点信息</a>
+    </div>
+  </nav>
+
+  <section class="side-note">
+    <span class="eyebrow">little reminder</span>
+    <p>把正在发生的事，慢慢写成以后可以回看的地方。</p>
+  </section>
+</aside>

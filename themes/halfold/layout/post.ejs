@@ -1,0 +1,27 @@
+<article class="article-page">
+  <div class="article-topline"><a href="<%- url_for('/') %>">← 回到文章列表</a><span><%= page.date.format('YYYY.MM.DD') %> · <%= page.categories && page.categories.length ? page.categories.first().name : '记录' %></span></div>
+  <div class="article-layout">
+    <main class="article-card">
+      <header class="article-header">
+        <p class="eyebrow">field note / <%= page.date.format('YYYY') %></p>
+        <h1><%= page.title %></h1>
+        <% if (page.description) { %><p class="article-excerpt"><%= page.description %></p><% } %>
+        <div class="tag-list">
+          <% if (page.tags) { page.tags.each(function (tag) { %><a href="<%- url_for('/tags/' + tag.name + '/') %>">#<%= tag.name %></a><% }); } %>
+        </div>
+        <div class="article-stats"><span>发布于 <%= page.date.format('YYYY-MM-DD') %></span><span>阅读约 <%= Math.max(1, Math.ceil((page.content || '').replace(/<[^>]+>/g, '').length / 420)) %> 分钟</span></div>
+      </header>
+      <% if (page.cover) { %><img class="article-cover" src="<%- url_for(page.cover) %>" alt="<%= page.title %> 封面"> <% } %>
+      <div class="article-body"><%- page.content %></div>
+      <footer class="article-footer"><a href="<%- url_for('/') %>">← 返回全部文章</a><span>Written by Halfold</span></footer>
+    </main>
+    <aside class="article-aside">
+      <section class="article-aside-card"><p class="eyebrow">contents</p><nav id="article-toc" aria-label="文章目录"><span class="toc-empty">滚动查看目录</span></nav></section>
+      <section class="article-aside-card article-aside-note"><p class="eyebrow">a note to self</p><p>写下来的瞬间，是以后可以重新回去的地方。</p><span>Record · Remember · Reinvent</span></section>
+    </aside>
+  </div>
+  <nav class="article-neighbors" aria-label="相邻文章">
+    <% if (page.prev) { %><a href="<%- url_for(page.prev.path) %>"><small>上一篇</small><b>← <%= page.prev.title %></b></a><% } else { %><span></span><% } %>
+    <% if (page.next) { %><a class="next" href="<%- url_for(page.next.path) %>"><small>下一篇</small><b><%= page.next.title %> →</b></a><% } %>
+  </nav>
+</article>

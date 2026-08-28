@@ -1,39 +1,28 @@
 {
-  "name": "sites-project",
-  "version": "0.1.0",
+  "name": "halfolds-blog",
+  "version": "1.0.0",
   "private": true,
-  "engines": {
-    "node": ">=22.13.0"
+  "description": "Halfold's Blog powered by Hexo",
+  "hexo": {
+    "version": "8.1.2"
   },
   "scripts": {
-    "dev": "vinext dev",
-    "build": "vinext build",
-    "start": "vinext start",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
+    "clean": "hexo clean",
+    "build": "hexo generate && node tools/prepare-sites.mjs",
+    "dev": "hexo server",
+    "start": "hexo server",
+    "new": "hexo new post",
+    "deploy": "hexo deploy"
   },
   "dependencies": {
-    "next": "16.2.6",
-    "react": "19.2.6",
-    "react-dom": "19.2.6"
-  },
-  "devDependencies": {
-    "@cloudflare/vite-plugin": "1.37.1",
-    "@cloudflare/workers-types": "4.20260515.1",
-    "@openai/sites-vite-plugin": "^0.1.0 || ^0.2.0",
-    "@tailwindcss/postcss": "4.2.1",
-    "@types/node": "22.19.19",
-    "@types/react": "19.2.14",
-    "@types/react-dom": "19.2.3",
-    "@vitejs/plugin-react": "6.0.2",
-    "@vitejs/plugin-rsc": "0.5.26",
-    "eslint": "9.39.4",
-    "eslint-config-next": "16.2.6",
-    "react-server-dom-webpack": "19.2.6",
-    "tailwindcss": "4.2.1",
-    "typescript": "5.9.3",
-    "vinext": "1.0.0-beta.3",
-    "vite": "8.0.13",
-    "wrangler": "4.92.0"
-  },
-  "type": "module"
+    "hexo": "^8.1.2",
+    "hexo-cli": "^4.3.2",
+    "hexo-generator-archive": "^2.0.0",
+    "hexo-generator-category": "^2.0.0",
+    "hexo-generator-index": "^4.0.0",
+    "hexo-generator-tag": "^2.0.0",
+    "hexo-renderer-ejs": "^2.0.0",
+    "hexo-renderer-marked": "^7.0.1",
+    "hexo-server": "^3.0.0"
+  }
 }

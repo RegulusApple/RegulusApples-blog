@@ -1,0 +1,10 @@
+<section class="content-section archive-page">
+  <div class="section-heading"><div><p class="eyebrow">article / archive</p><h1>一条关于<br><em>成为自己的时间线。</em></h1></div><span><%= site.posts.length %> 篇记录</span></div>
+  <div class="archive-list">
+    <% (page.posts || site.posts).each(function (post, index) { %>
+      <% const category = post.categories && post.categories.length ? post.categories.first().name : '记录'; %>
+      <a class="archive-row" href="<%- url_for(post.path) %>"><strong><%= post.date.format('YYYY') %></strong><span><%= String(index + 1).padStart(2, '0') %></span><div><b><%= post.title %></b><small><%= category %> · <%= post.date.format('YYYY.MM.DD') %></small></div><i>↗</i></a>
+    <% }); %>
+  </div>
+  <%- partial('_partial/pagination', { page: page }) %>
+</section>

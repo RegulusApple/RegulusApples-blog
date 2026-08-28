@@ -1,0 +1,46 @@
+<% const pageTitle = page.title ? `${page.title} · ${config.title}` : config.title; %>
+<!doctype html>
+<html lang="<%= config.language || 'zh-CN' %>">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%= pageTitle %></title>
+    <meta name="description" content="<%= page.description || config.description %>">
+    <link rel="icon" href="<%- url_for('/favicon.svg') %>">
+    <link rel="stylesheet" href="<%- url_for('/css/style.css') %>">
+  </head>
+  <body class="page-<%= page.layout || 'default' %>">
+    <div class="site-shell">
+      <header class="global-bar">
+        <div class="global-bar-inner">
+          <a class="brand" href="<%- url_for('/') %>" aria-label="回到 Halfold's Blog 首页">
+            <span class="brand-mark">H</span>
+            <span class="brand-copy"><strong>Halfold's Blog</strong><small>Record · Remember · Reinvent</small></span>
+          </a>
+          <nav class="topnav" aria-label="主导航">
+            <% Object.entries(theme.menu || {}).forEach(function (item) { %>
+              <a href="<%- url_for(item[1]) %>"><%= item[0] %></a>
+            <% }); %>
+          </nav>
+          <span class="status"><i></i>清新记录中</span>
+        </div>
+      </header>
+
+      <main class="page-content">
+        <div class="content-grid">
+          <%- partial('_partial/sidebar') %>
+          <section class="main-column">
+            <%- body %>
+          </section>
+        </div>
+      </main>
+
+      <footer class="site-footer">
+        <span>© <%= new Date().getFullYear() %> Halfold</span>
+        <span>Record · Remember · Reinvent · Revolutionize</span>
+        <span>Powered by Hexo</span>
+      </footer>
+    </div>
+    <script src="<%- url_for('/js/main.js') %>" defer></script>
+  </body>
+</html>

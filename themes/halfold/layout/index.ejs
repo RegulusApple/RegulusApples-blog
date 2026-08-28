@@ -1,0 +1,57 @@
+<section class="workspace-bar">
+  <span>Halfold · 个人博客 · <%= new Date().getFullYear() %></span>
+  <span class="workspace-mark">content / notes / memories</span>
+</section>
+
+<section class="welcome-panel" aria-labelledby="hero-title">
+  <div class="welcome-copy">
+    <p class="eyebrow"><%= theme.hero.eyebrow %></p>
+    <h1 id="hero-title"><%= theme.hero.title %><br><em><%= theme.hero.title_emphasis %></em></h1>
+    <p><%= theme.hero.description %></p>
+    <a class="primary-button" href="#recent-notes">阅读最近文章 <span>↗</span></a>
+  </div>
+  <div class="welcome-art">
+    <img src="<%- url_for(theme.hero.image) %>" alt="Whitesmith 插画">
+    <span><%= theme.hero.image_label %></span>
+  </div>
+</section>
+
+<section id="recent-notes" class="content-section">
+  <div class="section-heading">
+    <div><p class="eyebrow">recent notes</p><h2>找到一些<br><em>值得留下的事。</em></h2></div>
+    <span><%= site.posts.length %> 篇文章</span>
+  </div>
+
+  <div class="category-strip" aria-label="文章分类">
+    <a class="active" href="<%- url_for('/') %>">全部</a>
+    <% theme.categories.forEach(function (category) { %>
+      <a href="<%- url_for('/categories/' + category + '/') %>"><%= category %></a>
+    <% }); %>
+  </div>
+
+  <div class="post-list">
+    <% page.posts.each(function (post, index) { %>
+      <% const category = post.categories && post.categories.length ? post.categories.first().name : '记录'; %>
+      <article class="post-row">
+        <span class="post-number"><%= String(index + 1).padStart(2, '0') %></span>
+        <div class="post-row-main">
+          <p class="post-meta"><span><%= category %></span><span><%= post.date.format('YYYY.MM.DD') %></span></p>
+          <h3><a href="<%- url_for(post.path) %>"><%= post.title %></a></h3>
+          <p><%= post.description || post.excerpt || '一条正在被认真记录的笔记。' %></p>
+        </div>
+        <a class="row-arrow" href="<%- url_for(post.path) %>" aria-label="阅读 <%= post.title %>">↗</a>
+      </article>
+    <% }); %>
+  </div>
+
+  <%- partial('_partial/pagination', { page: page }) %>
+</section>
+
+<section class="memory-section">
+  <div class="section-heading compact"><div><p class="eyebrow">memory shelf</p><h2>生活也值得<br><em>被保存。</em></h2></div><a href="<%- url_for('/album/') %>">查看相册 ↗</a></div>
+  <div class="memory-grid">
+    <% theme.memory.forEach(function (memory, index) { %>
+      <figure><img loading="lazy" src="<%- url_for(memory.image) %>" alt="<%= memory.title %>"><figcaption><span>0<%= index + 1 %></span><%= memory.title %></figcaption></figure>
+    <% }); %>
+  </div>
+</section>

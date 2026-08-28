@@ -1,0 +1,36 @@
+menu:
+  文章: /
+  归档: /archives/
+  关于: /about/
+
+profile:
+  name: Halfold
+  role: student · maker · reader
+  avatar: /images/avatar.png
+  intro: 正在学习如何把好奇心变成作品，也在练习把生活里的微小瞬间认真保存下来。
+
+hero:
+  eyebrow: welcome to my little corner
+  title: Halfold's
+  title_emphasis: Blog.
+  description: Record，Remember，Reinvent，Revolutionize。把学习、项目、读书与生活，慢慢放进一个可以回看的地方。
+  image: /images/whitesmith.jpg
+  image_label: WHITESMITH · 01
+
+categories:
+  - 学习
+  - 项目
+  - 读书
+  - 生活
+  - 随笔
+  - 技术
+
+memory:
+  - title: the sea / somewhere to breathe
+    image: /images/coast.png
+  - title: send a thought into the air
+    image: /images/plane.png
+  - title: go a little farther today
+    image: /images/cycling.png
+  - title: stay with a good idea
+    image: /images/reading.png
