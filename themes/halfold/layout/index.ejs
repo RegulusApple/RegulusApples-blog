@@ -21,7 +21,14 @@
 <section id="recent-notes" class="content-section">
   <div class="section-heading">
     <div><p class="eyebrow">recent notes</p><h2>找到一些<br><em>值得留下的事。</em></h2></div>
-    <span><%= site.posts.length %> 篇文章 · <a class="section-heading-action" href="<%- url_for('/search/') %>">搜索文章 →</a></span>
+    <div class="section-heading-tools">
+      <span><%= site.posts.length %> 篇文章</span>
+      <form class="home-search-form" action="<%- url_for('/search/') %>" method="get" role="search">
+        <label class="sr-only" for="home-search-input">搜索文章</label>
+        <input id="home-search-input" type="search" name="q" placeholder="搜索文章" autocomplete="off">
+        <button type="submit" aria-label="开始搜索">⌕</button>
+      </form>
+    </div>
   </div>
 
   <div class="category-strip" aria-label="文章分类">
