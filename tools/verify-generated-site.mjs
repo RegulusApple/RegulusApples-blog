@@ -36,7 +36,7 @@ if (!searchPage.includes('data-search-page') || !Array.isArray(searchIndex) || s
   throw new Error('Generated local search page or index is missing.');
 }
 
-for (const marker of ['theme-toggle', 'manifest.webmanifest', 'href="/stats/"', 'href="/reading/"', 'home-search-form', 'home-search-input']) {
+for (const marker of ['theme-toggle', 'manifest.webmanifest', 'href="/stats/"', 'href="/reading/"', 'search-trigger', 'search-overlay', 'global-search-input']) {
   if (!homepage.includes(marker)) {
     throw new Error(`Generated homepage is missing second-phase feature marker: ${marker}`);
   }
@@ -64,7 +64,7 @@ for (const marker of ['reading-grid', 'book-card', '读书架']) {
   }
 }
 
-for (const marker of ['giscus.app/client.js', 'data-music-player', 'serviceWorker.register']) {
+for (const marker of ['giscus.app/client.js', 'data-music-player', 'searchOverlay', 'serviceWorker.register']) {
   if (!generatedScript.includes(marker)) {
     throw new Error(`Generated interaction script is missing third-phase feature marker: ${marker}`);
   }

@@ -37,6 +37,31 @@
     });
   }
 
+  var searchTrigger = document.getElementById('search-trigger');
+  var searchOverlay = document.getElementById('search-overlay');
+  var globalSearchInput = document.getElementById('global-search-input');
+  if (searchTrigger && searchOverlay && globalSearchInput) {
+    var lastFocusedElement = null;
+    var closeSearch = function () {
+      searchOverlay.hidden = true;
+      document.body.classList.remove('search-open');
+      if (lastFocusedElement) lastFocusedElement.focus();
+    };
+    var openSearch = function () {
+      lastFocusedElement = document.activeElement;
+      searchOverlay.hidden = false;
+      document.body.classList.add('search-open');
+      requestAnimationFrame(function () { globalSearchInput.focus(); });
+    };
+    searchTrigger.addEventListener('click', openSearch);
+    searchOverlay.querySelectorAll('[data-search-close]').forEach(function (closeButton) {
+      closeButton.addEventListener('click', closeSearch);
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && !searchOverlay.hidden) closeSearch();
+    });
+  }
+
   var articleBody = document.querySelector('.article-body');
   var toc = document.getElementById('article-toc');
 

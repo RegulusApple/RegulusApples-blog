@@ -32,10 +32,13 @@
           </a>
           <nav class="topnav" aria-label="主导航">
             <% Object.entries(theme.menu || {}).forEach(function (item) { %>
-              <a href="<%- url_for(item[1]) %>"><%= item[0] %></a>
+              <% if (item[0] !== '搜索') { %>
+                <a href="<%- url_for(item[1]) %>"><%= item[0] %></a>
+              <% } %>
             <% }); %>
           </nav>
           <div class="global-actions">
+            <button class="search-trigger" id="search-trigger" type="button" aria-label="打开搜索" aria-haspopup="dialog" aria-controls="search-overlay"><span aria-hidden="true"></span></button>
             <span class="status"><i></i>清新记录中</span>
             <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换颜色模式" aria-pressed="false"><span aria-hidden="true">☼</span><b>浅色</b></button>
           </div>
@@ -56,6 +59,20 @@
         <span>Record · Remember · Reinvent · Revolutionize</span>
         <span>Powered by Hexo</span>
       </footer>
+
+      <div class="search-overlay" id="search-overlay" hidden>
+        <div class="search-backdrop" data-search-close></div>
+        <section class="search-dialog" role="dialog" aria-modal="true" aria-labelledby="global-search-title">
+          <div class="search-dialog-heading">
+            <h2 id="global-search-title">Search</h2>
+            <button class="search-close" type="button" data-search-close aria-label="关闭搜索">×</button>
+          </div>
+          <form class="overlay-search-form" action="<%- url_for('/search/') %>" method="get" role="search">
+            <label class="sr-only" for="global-search-input">搜索文章</label>
+            <input id="global-search-input" type="search" name="q" placeholder="输入关键词搜索" autocomplete="off">
+          </form>
+        </section>
+      </div>
     </div>
     <script src="<%- url_for('/js/main.js') %>" defer></script>
     <% if (analytics.enabled && analytics.provider === 'umami' && analytics.script_url && analytics.website_id) { %>
