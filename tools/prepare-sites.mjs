@@ -11,10 +11,9 @@ await mkdir(client, { recursive: true });
 await mkdir(server, { recursive: true });
 await cp(join(root, 'public'), client, { recursive: true });
 
-await writeFile(join(server, 'index.js'), `const notFound = new Response('Not found', { status: 404 });
-
+await writeFile(join(server, 'index.js'), `
 async function fetchAsset(request, env) {
-  if (!env?.ASSETS) return notFound;
+  if (!env?.ASSETS) return new Response('Not found', { status: 404 });
   return env.ASSETS.fetch(request);
 }
 
