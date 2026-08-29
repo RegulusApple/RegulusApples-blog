@@ -1,10 +1,39 @@
-menu:
-  文章: /
-  归档: /archives/
-  搜索: /search/
-  统计: /stats/
-  读书架: /reading/
-  关于: /about/
+navigation:
+  - key: articles
+    label: 文章
+    items:
+      - label: 全部文章
+        path: /
+      - label: 归档
+        path: /archives/
+      - label: 分类
+        path: /categories/
+      - label: 标签
+        path: /tags/
+      - label: 搜索
+        path: /search/
+  - key: memory
+    label: 记忆
+    items:
+      - label: 相册
+        path: /album/
+      - label: 音乐
+        path: /music/
+      - label: 读书架
+        path: /reading/
+  - key: about
+    label: 关于
+    items:
+      - label: 关于我
+        path: /about/
+      - label: 友情链接
+        path: /links/
+      - label: 站点统计
+        path: /stats/
+      - label: 留言板
+        path: /message/
+      - label: 站点信息
+        path: /sitetime/
 
 profile:
   name: Halfold

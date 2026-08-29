@@ -78,6 +78,45 @@
   if (currentArticle) markPostRead(currentArticle.dataset.postPath);
   window.addEventListener('pageshow', syncUnreadLabels);
 
+  var navGroups = Array.from(document.querySelectorAll('[data-nav-group]'));
+  var subnavPanels = Array.from(document.querySelectorAll('[data-subnav-panel]'));
+  if (navGroups.length && subnavPanels.length) {
+    var normalizePath = function (path) {
+      var normalized = String(path || '/').split('?')[0].replace(/\/+$/, '');
+      return normalized || '/';
+    };
+    var currentPath = normalizePath(window.location.pathname);
+    var getNavGroupForPath = function (path) {
+      if (['/album', '/music', '/reading'].some(function (prefix) { return path === prefix || path.indexOf(prefix + '/') === 0; })) return 'memory';
+      if (['/about', '/links', '/stats', '/message', '/sitetime'].some(function (prefix) { return path === prefix || path.indexOf(prefix + '/') === 0; })) return 'about';
+      return 'articles';
+    };
+    var isNavPathActive = function (path) {
+      var targetPath = normalizePath(path);
+      return targetPath === '/' ? currentPath === '/' : currentPath === targetPath || currentPath.indexOf(targetPath + '/') === 0;
+    };
+    var setNavGroup = function (groupKey) {
+      navGroups.forEach(function (button) {
+        var isActive = button.dataset.navGroup === groupKey;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-expanded', String(isActive));
+      });
+      subnavPanels.forEach(function (panel) {
+        var isActive = panel.dataset.subnavPanel === groupKey;
+        panel.hidden = !isActive;
+        panel.querySelectorAll('a[data-nav-path]').forEach(function (link) {
+          link.classList.toggle('is-active', isActive && isNavPathActive(link.dataset.navPath));
+          if (isActive && isNavPathActive(link.dataset.navPath)) link.setAttribute('aria-current', 'page');
+          else link.removeAttribute('aria-current');
+        });
+      });
+    };
+    navGroups.forEach(function (button) {
+      button.addEventListener('click', function () { setNavGroup(button.dataset.navGroup); });
+    });
+    setNavGroup(getNavGroupForPath(currentPath));
+  }
+
   var themeToggle = document.getElementById('theme-toggle');
   if (themeToggle) {
     var setTheme = function (theme) {

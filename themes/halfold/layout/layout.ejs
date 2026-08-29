@@ -30,11 +30,9 @@
             <span class="brand-mark">H</span>
             <span class="brand-copy"><strong>Halfold's Blog</strong><small>Record · Remember · Reinvent</small></span>
           </a>
-          <nav class="topnav" aria-label="主导航">
-            <% Object.entries(theme.menu || {}).forEach(function (item) { %>
-              <% if (item[0] !== '搜索') { %>
-                <a href="<%- url_for(item[1]) %>"><%= item[0] %></a>
-              <% } %>
+          <nav class="topnav" aria-label="主导航分组">
+            <% (theme.navigation || []).forEach(function (group, index) { %>
+              <button type="button" data-nav-group="<%= group.key %>" aria-controls="subnav-<%= group.key %>" aria-expanded="<%= index === 0 ? 'true' : 'false' %>"><%= group.label %></button>
             <% }); %>
           </nav>
           <div class="global-actions">
@@ -43,6 +41,17 @@
             <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换颜色模式" aria-pressed="false"><span aria-hidden="true">☼</span><b>浅色</b></button>
           </div>
         </div>
+        <nav class="section-nav" aria-label="当前分组导航">
+          <div class="section-nav-inner">
+            <% (theme.navigation || []).forEach(function (group, index) { %>
+              <div class="subnav-panel" id="subnav-<%= group.key %>" data-subnav-panel="<%= group.key %>"<%= index === 0 ? '' : ' hidden' %>>
+                <% (group.items || []).forEach(function (item) { %>
+                  <a href="<%- url_for(item.path) %>" data-nav-path="<%= item.path %>"><%= item.label %></a>
+                <% }); %>
+              </div>
+            <% }); %>
+          </div>
+        </nav>
       </header>
 
       <main class="page-content">
@@ -74,7 +83,7 @@
         </section>
       </div>
     </div>
-    <script src="<%- url_for('/js/main.js') %>?v=3" defer></script>
+    <script src="<%- url_for('/js/main.js') %>?v=4" defer></script>
     <% if (analytics.enabled && analytics.provider === 'umami' && analytics.script_url && analytics.website_id) { %>
       <script async src="<%= analytics.script_url %>" data-website-id="<%= analytics.website_id %>"></script>
     <% } else if (analytics.enabled && analytics.provider === 'google-analytics' && analytics.measurement_id) { %>
