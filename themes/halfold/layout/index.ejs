@@ -36,7 +36,7 @@
       <div class="post-list">
         <% page.posts.each(function (post, index) { %>
           <% const category = post.categories && post.categories.length ? post.categories.first().name : '记录'; %>
-          <article class="post-row">
+          <article class="post-row" data-post-path="<%= post.path %>">
             <span class="post-number"><%= String(index + 1).padStart(2, '0') %></span>
             <div class="post-row-main">
               <p class="post-meta">
@@ -45,7 +45,7 @@
                   <% post.tags.each(function (tag) { %><span class="post-label post-label-tag">#<%= tag.name %></span><% }); %>
                 <% } %>
                 <% if (post.isNew) { %><span class="post-label post-label-new">New</span><% } %>
-                <span class="post-label post-label-unread">Unread</span>
+                <span class="post-label post-label-unread" data-unread-label>Unread</span>
                 <span class="post-date"><%= post.date.format('YYYY.MM.DD') %></span>
               </p>
               <h3><a href="<%- url_for(post.path) %>"><%= post.title %></a></h3>

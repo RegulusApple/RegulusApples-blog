@@ -1,4 +1,4 @@
-<article class="article-page">
+<article class="article-page" data-post-path="<%= page.path %>">
   <% const articleText = String(page.content || '').replace(/<[^>]*>/g, ' ').replace(/&[^;]+;/g, ' ').replace(/\s+/g, ' ').trim(); %>
   <% const wordCount = articleText.replace(/\s/g, '').length; %>
   <% const readingMinutes = Math.max(1, Math.ceil(wordCount / 420)); %>

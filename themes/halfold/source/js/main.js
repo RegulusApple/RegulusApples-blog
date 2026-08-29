@@ -15,6 +15,69 @@
     return stripHtml(value).toLocaleLowerCase();
   }
 
+  var readPostsStorageKey = 'halfold-read-posts';
+  var parseReadPosts = function (value) {
+    try {
+      var parsed = JSON.parse(value || '[]');
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+      return [];
+    }
+  };
+  var getCookieReadPosts = function () {
+    try {
+      var cookie = document.cookie.split('; ').find(function (item) {
+        return item.indexOf(readPostsStorageKey + '=') === 0;
+      });
+      return cookie ? parseReadPosts(decodeURIComponent(cookie.slice(readPostsStorageKey.length + 1))) : [];
+    } catch (error) {
+      return [];
+    }
+  };
+  var getReadPosts = function () {
+    try {
+      var stored = parseReadPosts(localStorage.getItem(readPostsStorageKey));
+      if (stored.length) return stored;
+    } catch (error) {
+      // Fall back to a first-party cookie when storage is unavailable.
+    }
+    return getCookieReadPosts();
+  };
+  var saveReadPosts = function (readPosts) {
+    var serialized = JSON.stringify(readPosts);
+    try { localStorage.setItem(readPostsStorageKey, serialized); } catch (error) {}
+    try {
+      document.cookie = readPostsStorageKey + '=' + encodeURIComponent(serialized) + '; max-age=31536000; path=/; samesite=lax';
+    } catch (error) {}
+  };
+  var markPostRead = function (path) {
+    if (!path) return;
+    var readPosts = getReadPosts();
+    if (readPosts.indexOf(path) === -1) {
+      readPosts.push(path);
+      saveReadPosts(readPosts);
+    }
+  };
+  var syncUnreadLabels = function () {
+    var readPosts = getReadPosts();
+    document.querySelectorAll('.post-row[data-post-path] [data-unread-label]').forEach(function (label) {
+      var row = label.closest('[data-post-path]');
+      label.hidden = !row || readPosts.indexOf(row.dataset.postPath) !== -1;
+    });
+  };
+  syncUnreadLabels();
+  document.querySelectorAll('.post-row[data-post-path]').forEach(function (row) {
+    row.querySelectorAll('a[href]').forEach(function (link) {
+      link.addEventListener('click', function () {
+        markPostRead(row.dataset.postPath);
+        syncUnreadLabels();
+      });
+    });
+  });
+  var currentArticle = document.querySelector('.article-page[data-post-path]');
+  if (currentArticle) markPostRead(currentArticle.dataset.postPath);
+  window.addEventListener('pageshow', syncUnreadLabels);
+
   var themeToggle = document.getElementById('theme-toggle');
   if (themeToggle) {
     var setTheme = function (theme) {
