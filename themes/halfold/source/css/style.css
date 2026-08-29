@@ -190,6 +190,7 @@ html[data-theme='dark'] .welcome-art span { color: #4d377c; }
 .post-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin: 0 0 10px; color: var(--muted); font-size: 11px; }
 .post-label, .post-date { display: inline-flex; align-items: center; min-height: 27px; padding: 5px 10px; border-radius: 8px; line-height: 1; }
 .post-label-category { color: var(--purple); background: rgba(229, 242, 169, .48); font-weight: 800; }
+.post-label-tag { color: var(--purple-soft); background: rgba(117, 97, 168, .1); }
 .post-label-new { color: var(--purple); background: var(--green-soft); font-weight: 800; }
 .post-label-unread { color: var(--muted); background: rgba(245, 244, 235, .9); }
 .post-date { color: var(--muted); background: rgba(229, 242, 169, .25); }

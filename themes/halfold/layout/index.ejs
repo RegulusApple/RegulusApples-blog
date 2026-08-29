@@ -41,6 +41,9 @@
             <div class="post-row-main">
               <p class="post-meta">
                 <span class="post-label post-label-category"><%= category %></span>
+                <% if (post.tags && post.tags.length) { %>
+                  <% post.tags.each(function (tag) { %><span class="post-label post-label-tag">#<%= tag.name %></span><% }); %>
+                <% } %>
                 <% if (post.isNew) { %><span class="post-label post-label-new">New</span><% } %>
                 <span class="post-label post-label-unread">Unread</span>
                 <span class="post-date"><%= post.date.format('YYYY.MM.DD') %></span>
