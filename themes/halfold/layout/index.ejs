@@ -39,7 +39,12 @@
           <article class="post-row">
             <span class="post-number"><%= String(index + 1).padStart(2, '0') %></span>
             <div class="post-row-main">
-              <p class="post-meta"><span><%= category %></span><span><%= post.date.format('YYYY.MM.DD') %></span></p>
+              <p class="post-meta">
+                <span class="post-label post-label-category"><%= category %></span>
+                <% if (post.isNew) { %><span class="post-label post-label-new">New</span><% } %>
+                <span class="post-label post-label-unread">Unread</span>
+                <span class="post-date"><%= post.date.format('YYYY.MM.DD') %></span>
+              </p>
               <h3><a href="<%- url_for(post.path) %>"><%= post.title %></a></h3>
               <p><%= post.description || post.excerpt || '一条正在被认真记录的笔记。' %></p>
             </div>

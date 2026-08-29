@@ -3,6 +3,7 @@ title: 把学习变成可回看的系统
 date: 2026-08-26 09:30:00
 updated: 2026-08-26 09:30:00
 category: 学习
+isNew: true
 tags:
   - 方法
   - 记录
