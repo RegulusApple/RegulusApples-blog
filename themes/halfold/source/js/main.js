@@ -112,7 +112,8 @@
       });
     };
     navGroups.forEach(function (button) {
-      button.addEventListener('click', function () { setNavGroup(button.dataset.navGroup); });
+      button.addEventListener('mouseenter', function () { setNavGroup(button.dataset.navGroup); });
+      button.addEventListener('focus', function () { setNavGroup(button.dataset.navGroup); });
     });
     setNavGroup(getNavGroupForPath(currentPath));
   }
