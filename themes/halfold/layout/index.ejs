@@ -1,10 +1,10 @@
-<section class="workspace-bar">
-  <span>Halfold · 个人博客 · <%= new Date().getFullYear() %></span>
-  <span class="workspace-mark">content / notes / memories</span>
-</section>
-
 <div class="homepage-workspace">
   <div class="homepage-main">
+    <div class="signal-line">
+      <span class="pulse"><i></i><strong>最近的一句话：</strong>今天也在练习把复杂的事说清楚。</span>
+      <span><%= String(site.posts.length).padStart(2, '0') %> notes · <%= new Date().getFullYear() %></span>
+    </div>
+
     <section class="welcome-panel" aria-labelledby="hero-title">
       <div class="welcome-copy">
         <p class="eyebrow"><%= theme.hero.eyebrow %></p>
