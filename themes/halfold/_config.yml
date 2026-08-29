@@ -36,14 +36,14 @@ navigation:
         path: /sitetime/
 
 profile:
-  name: Halfold
+  name: RegulusApple
   role: student · maker · reader
   avatar: /images/avatar.png
   intro: 正在学习如何把好奇心变成作品，也在练习把生活里的微小瞬间认真保存下来。
 
 hero:
   eyebrow: welcome to my little corner
-  title: Halfold's
+  title: RegulusApple's
   title_emphasis: Blog.
   description: Record，Remember，Reinvent，Revolutionize。把学习、项目、读书与生活，慢慢放进一个可以回看的地方。
   image: /images/whitesmith.jpg
@@ -70,17 +70,17 @@ music:
   provider: manual
   playlist:
     - title: A quiet morning
-      artist: Halfold's playlist
+      artist: RegulusApple's playlist
       year: 2026
       cover: /images/reading.png
       audio: ''
     - title: Still, moving
-      artist: Halfold's playlist
+      artist: RegulusApple's playlist
       year: 2026
       cover: /images/cycling.png
       audio: ''
     - title: After the rain
-      artist: Halfold's playlist
+      artist: RegulusApple's playlist
       year: 2026
       cover: /images/coast.png
       audio: ''
@@ -95,7 +95,7 @@ reading:
       cover: /images/reading.png
       link: ''
     - title: 在变化里保持清醒
-      author: Halfold's notes
+      author: RegulusApple's notes
       status: 在读
       note: 读几页，停下来想一想，再把一句话带回生活。
       cover: /images/coast.png

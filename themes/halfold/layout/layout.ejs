@@ -10,7 +10,7 @@
     <meta name="description" content="<%= page.description || config.description %>">
     <link rel="icon" href="<%- url_for('/favicon.svg') %>">
     <link rel="manifest" href="<%- url_for('/manifest.webmanifest') %>">
-    <link rel="stylesheet" href="<%- url_for('/css/style.css') %>">
+    <link rel="stylesheet" href="<%- url_for('/css/style.css') %>?v=23">
     <link rel="stylesheet" href="<%- url_for('/css/katex.min.css') %>">
     <script>
       (function () {
@@ -26,9 +26,9 @@
     <div class="site-shell">
       <header class="global-bar">
         <div class="global-bar-inner">
-          <a class="brand" href="<%- url_for('/') %>" aria-label="回到 Halfold's Blog 首页">
-            <span class="brand-mark">H</span>
-            <span class="brand-copy"><strong>Halfold's Blog</strong><small>Record · Remember · Reinvent</small></span>
+          <a class="brand" href="<%- url_for('/') %>" aria-label="回到 RegulusApple's Blog 首页">
+            <span class="brand-mark">RA</span>
+            <span class="brand-copy"><strong>RegulusApple's Blog</strong><small>Record · Remember · Reinvent</small></span>
           </a>
           <nav class="topnav" aria-label="主导航分组">
             <% (theme.navigation || []).forEach(function (group, index) { %>
@@ -37,7 +37,6 @@
           </nav>
           <div class="global-actions">
             <button class="search-trigger" id="search-trigger" type="button" aria-label="打开搜索" aria-haspopup="dialog" aria-controls="search-overlay"><span aria-hidden="true"></span></button>
-            <span class="status"><i></i>清新记录中</span>
             <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换颜色模式" aria-pressed="false"><span aria-hidden="true">☼</span><b>浅色</b></button>
           </div>
         </div>
@@ -64,7 +63,7 @@
       </main>
 
       <footer class="site-footer">
-        <span>© <%= new Date().getFullYear() %> Halfold</span>
+        <span>© <%= new Date().getFullYear() %> RegulusApple</span>
         <span>Record · Remember · Reinvent · Revolutionize</span>
         <span>Powered by Hexo</span>
       </footer>
@@ -83,7 +82,7 @@
         </section>
       </div>
     </div>
-    <script src="<%- url_for('/js/main.js') %>?v=6" defer></script>
+    <script src="<%- url_for('/js/main.js') %>?v=12" defer></script>
     <% if (analytics.enabled && analytics.provider === 'umami' && analytics.script_url && analytics.website_id) { %>
       <script async src="<%= analytics.script_url %>" data-website-id="<%= analytics.website_id %>"></script>
     <% } else if (analytics.enabled && analytics.provider === 'google-analytics' && analytics.measurement_id) { %>

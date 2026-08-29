@@ -2,7 +2,6 @@
   <% const articleText = String(page.content || '').replace(/<[^>]*>/g, ' ').replace(/&[^;]+;/g, ' ').replace(/\s+/g, ' ').trim(); %>
   <% const wordCount = articleText.replace(/\s/g, '').length; %>
   <% const readingMinutes = Math.max(1, Math.ceil(wordCount / 420)); %>
-  <div class="article-topline"><a href="<%- url_for('/') %>">← 回到文章列表</a><span><%= page.date.format('YYYY.MM.DD') %> · <%= page.categories && page.categories.length ? page.categories.first().name : '记录' %></span></div>
   <div class="article-layout">
     <main class="article-card">
       <header class="article-header">
@@ -16,49 +15,13 @@
       </header>
       <% if (page.cover) { %><img class="article-cover" loading="lazy" decoding="async" src="<%- url_for(page.cover) %>" alt="<%= page.title %> 封面"> <% } %>
       <div class="article-body"><%- page.content %></div>
-      <%
-        const pageTags = [];
-        const pageCategories = [];
-        if (page.tags) page.tags.each(function (tag) { pageTags.push(tag.name); });
-        if (page.categories) page.categories.each(function (category) { pageCategories.push(category.name); });
-        const relatedPosts = [];
-        site.posts.each(function (post) {
-          if (post.path === page.path || relatedPosts.length >= 3) return;
-          const postTags = [];
-          const postCategories = [];
-          if (post.tags) post.tags.each(function (tag) { postTags.push(tag.name); });
-          if (post.categories) post.categories.each(function (category) { postCategories.push(category.name); });
-          const sharedTag = postTags.some(function (tag) { return pageTags.indexOf(tag) !== -1; });
-          const sharedCategory = postCategories.some(function (category) { return pageCategories.indexOf(category) !== -1; });
-          if (sharedTag || sharedCategory) relatedPosts.push(post);
-        });
-        if (relatedPosts.length < 3) {
-          site.posts.each(function (post) {
-            if (post.path !== page.path && relatedPosts.length < 3 && relatedPosts.indexOf(post) === -1) relatedPosts.push(post);
-          });
-        }
-      %>
-      <% if (relatedPosts.length) { %>
-        <section class="related-section" aria-labelledby="related-title">
-          <div class="related-heading"><p class="eyebrow">read next</p><h2 id="related-title">也许你会喜欢</h2></div>
-          <div class="related-grid">
-            <% relatedPosts.forEach(function (post) { %>
-              <a class="related-card" href="<%- url_for(post.path) %>"><small><%= post.date.format('YYYY.MM.DD') %></small><b><%= post.title %></b><span><%= post.description || post.excerpt %></span></a>
-            <% }); %>
-          </div>
-        </section>
-      <% } %>
       <% const commentConfig = theme.comments || {}; %>
       <section class="article-comments" data-comments data-provider="<%= commentConfig.provider || '' %>" data-repo="<%= commentConfig.repo || '' %>" data-repo-id="<%= commentConfig.repo_id || '' %>" data-category="<%= commentConfig.category || '' %>" data-category-id="<%= commentConfig.category_id || '' %>" data-mapping="<%= commentConfig.mapping || 'pathname' %>" data-lang="<%= commentConfig.lang || 'zh-CN' %>">
         <div class="related-heading"><p class="eyebrow">conversation</p><h2>留下回应</h2></div>
         <% if (!commentConfig.enabled) { %><p class="comments-placeholder">评论区已经预留。配置 Giscus 或其他评论服务后，这里会变成可用的讨论区。</p><% } else { %><div class="comment-mount"><p class="comments-placeholder">正在加载评论区……</p></div><% } %>
       </section>
-      <footer class="article-footer"><a href="<%- url_for('/') %>">← 返回全部文章</a><span>Written by Halfold</span></footer>
+      <footer class="article-footer"><a href="<%- url_for('/') %>">← 返回全部文章</a><span>Written by <%= config.author || theme.profile.name %></span></footer>
     </main>
-    <aside class="article-aside">
-      <section class="article-aside-card"><p class="eyebrow">contents</p><nav id="article-toc" aria-label="文章目录"><span class="toc-empty">滚动查看目录</span></nav></section>
-      <section class="article-aside-card article-aside-note"><p class="eyebrow">a note to self</p><p>写下来的瞬间，是以后可以重新回去的地方。</p><span>Record · Remember · Reinvent</span></section>
-    </aside>
   </div>
   <nav class="article-neighbors" aria-label="相邻文章">
     <% if (page.prev) { %><a href="<%- url_for(page.prev.path) %>"><small>上一篇</small><b>← <%= page.prev.title %></b></a><% } else { %><span></span><% } %>

@@ -3,7 +3,7 @@
   <div class="archive-list">
     <% (page.posts || site.posts).each(function (post, index) { %>
       <% const category = post.categories && post.categories.length ? post.categories.first().name : '记录'; %>
-      <a class="archive-row" href="<%- url_for(post.path) %>"><strong><%= post.date.format('YYYY') %></strong><span><%= String(index + 1).padStart(2, '0') %></span><div><b><%= post.title %></b><small><%= category %> · <%= post.date.format('YYYY.MM.DD') %></small></div><i>↗</i></a>
+      <article class="archive-row" data-post-path="<%= post.path %>"><strong><%= post.date.format('YYYY') %></strong><span><%= String(index + 1).padStart(2, '0') %></span><div class="archive-row-main"><b><a href="<%- url_for(post.path) %>"><%= post.title %></a></b><%- partial('_partial/post-meta', { post: post }) %></div><a class="archive-row-arrow" href="<%- url_for(post.path) %>" aria-label="阅读 <%= post.title %>">↗</a></article>
     <% }); %>
   </div>
   <%- partial('_partial/pagination', { page: page }) %>

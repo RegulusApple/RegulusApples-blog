@@ -1,0 +1,13 @@
+<%
+  const postItem = post || page;
+  const category = postItem.categories && postItem.categories.length ? postItem.categories.first().name : '记录';
+%>
+<p class="post-meta">
+  <span class="post-label post-label-category"><%= category %></span>
+  <% if (postItem.tags && postItem.tags.length) { %>
+    <% postItem.tags.each(function (tag) { %><a class="post-label post-label-tag" href="<%- url_for('/tags/' + tag.name + '/') %>">#<%= tag.name %></a><% }); %>
+  <% } %>
+  <% if (postItem.isNew) { %><span class="post-label post-label-new">New</span><% } %>
+  <span class="post-label post-label-unread" data-unread-label>Unread</span>
+  <span class="post-date"><%= postItem.date.format('YYYY.MM.DD') %></span>
+</p>

@@ -1,15 +1,88 @@
 <aside class="site-sidebar" aria-label="博客功能分区">
   <section class="profile-card">
-    <div class="profile-index"><span>01</span><span>MYSELF</span></div>
     <div class="profile-person">
-      <img src="<%- url_for(theme.profile.avatar) %>" alt="Halfold 的头像">
+      <img src="<%- url_for(theme.profile.avatar) %>" alt="<%= theme.profile.name %> 的头像">
       <div><strong><%= theme.profile.name %></strong><span><%= theme.profile.role %></span></div>
     </div>
     <p><%= theme.profile.intro %></p>
   </section>
 
-  <section class="side-note">
-    <span class="eyebrow">little reminder</span>
-    <p>把正在发生的事，慢慢写成以后可以回看的地方。</p>
+  <% const sidebarTracks = (theme.music && theme.music.playlist) || []; %>
+  <% const sidebarTrack = sidebarTracks[0] || {}; %>
+  <% const sidebarHasAudio = sidebarTracks.some(function (track) { return track.audio; }); %>
+  <section class="home-widget home-widget-player" data-mini-music-player>
+    <div class="home-widget-heading"><h2>Now Playing</h2></div>
+    <div class="mini-music-main">
+      <div class="mini-music-disc" aria-hidden="true">♫</div>
+      <div class="mini-music-copy">
+        <span class="mini-music-eyebrow">NOW / SELECTED</span>
+        <strong data-mini-music-title><%= sidebarTrack.title || '选择一首歌' %></strong>
+        <small data-mini-music-artist><%= sidebarTrack.artist || 'RegulusApple · playlist' %><% if (sidebarTrack.year) { %> · <%= sidebarTrack.year %><% } %></small>
+      </div>
+    </div>
+    <div class="mini-music-controls">
+      <button type="button" class="mini-music-button" data-mini-music-play aria-label="播放当前歌曲"<% if (!sidebarHasAudio) { %> disabled<% } %>><span aria-hidden="true">▶</span></button>
+      <button type="button" class="mini-music-button" data-mini-music-next aria-label="切换歌曲"><span aria-hidden="true">↻</span></button>
+      <span class="mini-music-state" data-mini-music-state><%= sidebarTrack.audio ? '可播放' : '待接入' %></span>
+    </div>
+    <audio data-mini-music-audio preload="metadata"></audio>
+    <script type="application/json" data-mini-music-data><%- JSON.stringify(sidebarTracks) %></script>
   </section>
+
+  <% if (page.layout === 'post') { %>
+    <section class="home-widget home-widget-contents" aria-labelledby="contents-widget-title">
+      <div class="home-widget-heading"><h2 id="contents-widget-title">Contents</h2></div>
+      <nav id="article-toc" aria-label="文章目录"><span class="toc-empty">滚动查看目录</span></nav>
+    </section>
+  <% } else { %>
+    <%
+      const archivePosts = [];
+      const archiveYearCounts = {};
+      let archiveWordCount = 0;
+      site.posts.each(function (post) {
+        archivePosts.push(post);
+        const year = post.date.format('YYYY');
+        archiveYearCounts[year] = (archiveYearCounts[year] || 0) + 1;
+        const postText = String(post.content || '').replace(/<[^>]*>/g, ' ').replace(/&[^;]+;/g, ' ').replace(/\s+/g, ' ').trim();
+        archiveWordCount += postText.replace(/\s/g, '').length;
+      });
+      archivePosts.sort(function (a, b) { return b.date.valueOf() - a.date.valueOf(); });
+      const archiveYears = Object.entries(archiveYearCounts).sort(function (a, b) { return b[0].localeCompare(a[0]); });
+      const archiveLatestPost = archivePosts[0] || null;
+      const archiveFirstPost = archivePosts[archivePosts.length - 1] || null;
+      const archiveRuntimeDays = archiveFirstPost ? Math.max(1, Math.floor((Date.now() - archiveFirstPost.date.valueOf()) / 86400000) + 1) : 0;
+      const archiveLastUpdate = archiveLatestPost ? Math.max(0, Math.floor((Date.now() - archiveLatestPost.date.valueOf()) / 86400000)) : null;
+      const archiveFormatWords = function (count) {
+        if (count < 1000) return String(count);
+        return (count / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+      };
+      const archiveFormatAge = function (days) {
+        if (days === null) return '暂无';
+        if (days === 0) return 'today';
+        return days + (days === 1 ? ' day ago' : ' days ago');
+      };
+    %>
+    <section class="home-widget home-widget-archive" aria-labelledby="archive-widget-title">
+      <div class="home-widget-heading"><h2 id="archive-widget-title">Archive</h2></div>
+      <div class="archive-year-grid">
+        <% archiveYears.forEach(function (item) { %>
+          <a class="archive-year-card" href="<%- url_for('/archives/' + item[0] + '/') %>">
+            <span><%= item[0] %></span>
+            <strong><%= item[1] %> <small>Posts</small></strong>
+          </a>
+        <% }); %>
+        <a class="archive-year-card" href="<%- url_for('/archives/') %>">
+          <span>All posts</span>
+          <strong><%= archivePosts.length %> <small>Posts</small></strong>
+        </a>
+      </div>
+      <div class="archive-stat-list" aria-label="博客统计">
+        <div class="archive-stat"><span class="archive-stat-icon" aria-hidden="true">▰</span><span>Posts:</span><strong><%= archivePosts.length %></strong></div>
+        <div class="archive-stat"><span class="archive-stat-icon" aria-hidden="true">◫</span><span>Runtime:</span><strong><%= archiveRuntimeDays %> days</strong></div>
+        <div class="archive-stat"><span class="archive-stat-icon" aria-hidden="true">↻</span><span>Last update:</span><strong><%= archiveFormatAge(archiveLastUpdate) %></strong></div>
+        <div class="archive-stat"><span class="archive-stat-icon" aria-hidden="true">W</span><span>Word count:</span><strong><%= archiveFormatWords(archiveWordCount) %></strong></div>
+      </div>
+    </section>
+  <% } %>
+
 </aside>

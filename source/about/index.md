@@ -1,10 +1,10 @@
 ---
 title: 关于我
 layout: page
-description: Halfold 的个人介绍。
+description: RegulusApple 的个人介绍。
 ---
 
-## 你好，我是 Halfold
+## 你好，我是 RegulusApple
 
 一个正在学习、做项目、读书，也努力把生活过得具体的人。
 

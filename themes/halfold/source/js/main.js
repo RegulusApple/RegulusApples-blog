@@ -60,14 +60,15 @@
   };
   var syncUnreadLabels = function () {
     var readPosts = getReadPosts();
-    document.querySelectorAll('.post-row[data-post-path] [data-unread-label]').forEach(function (label) {
+    document.querySelectorAll('[data-post-path] [data-unread-label]').forEach(function (label) {
       var row = label.closest('[data-post-path]');
       label.hidden = !row || readPosts.indexOf(row.dataset.postPath) !== -1;
     });
   };
   syncUnreadLabels();
-  document.querySelectorAll('.post-row[data-post-path]').forEach(function (row) {
-    row.querySelectorAll('a[href]').forEach(function (link) {
+  document.querySelectorAll('[data-post-path]').forEach(function (row) {
+    var links = row.matches('a[href]') ? [row].concat(Array.from(row.querySelectorAll('a[href]'))) : Array.from(row.querySelectorAll('a[href]'));
+    links.forEach(function (link) {
       link.addEventListener('click', function () {
         markPostRead(row.dataset.postPath);
         syncUnreadLabels();
@@ -77,6 +78,105 @@
   var currentArticle = document.querySelector('.article-page[data-post-path]');
   if (currentArticle) markPostRead(currentArticle.dataset.postPath);
   window.addEventListener('pageshow', syncUnreadLabels);
+
+  var categoryFilters = Array.from(document.querySelectorAll('[data-category-filter]'));
+  var homepagePostRows = Array.from(document.querySelectorAll('.category-strip ~ .post-list > .post-row[data-post-category]'));
+  if (categoryFilters.length && homepagePostRows.length) {
+    var categoryCount = document.querySelector('[data-category-count]');
+    var categoryEmpty = document.querySelector('[data-category-empty]');
+    var applyCategoryFilter = function (category) {
+      var visibleIndex = 0;
+      categoryFilters.forEach(function (filter) {
+        var isActive = filter.dataset.categoryFilter === category;
+        filter.classList.toggle('active', isActive);
+        if (isActive) filter.setAttribute('aria-current', 'page');
+        else filter.removeAttribute('aria-current');
+      });
+      homepagePostRows.forEach(function (row) {
+        var isVisible = category === 'all' || row.dataset.postCategory === category;
+        row.hidden = !isVisible;
+        if (isVisible) {
+          visibleIndex += 1;
+          var number = row.querySelector('.post-number');
+          if (number) number.textContent = String(visibleIndex).padStart(2, '0');
+        }
+      });
+      if (categoryCount) categoryCount.textContent = visibleIndex + ' 篇文章';
+      if (categoryEmpty) categoryEmpty.hidden = visibleIndex !== 0;
+      syncUnreadLabels();
+    };
+    categoryFilters.forEach(function (filter) {
+      filter.addEventListener('click', function (event) {
+        event.preventDefault();
+        applyCategoryFilter(filter.dataset.categoryFilter || 'all');
+      });
+    });
+  }
+
+  var miniMusicPlayer = document.querySelector('[data-mini-music-player]');
+  if (miniMusicPlayer) {
+    var miniAudio = miniMusicPlayer.querySelector('[data-mini-music-audio]');
+    var miniData = miniMusicPlayer.querySelector('[data-mini-music-data]');
+    var miniTracks = [];
+    try { miniTracks = JSON.parse(miniData ? miniData.textContent || '[]' : '[]'); } catch (error) { miniTracks = []; }
+    var miniPlay = miniMusicPlayer.querySelector('[data-mini-music-play]');
+    var miniNext = miniMusicPlayer.querySelector('[data-mini-music-next]');
+    var miniTitle = miniMusicPlayer.querySelector('[data-mini-music-title]');
+    var miniArtist = miniMusicPlayer.querySelector('[data-mini-music-artist]');
+    var miniState = miniMusicPlayer.querySelector('[data-mini-music-state]');
+    var miniIndex = 0;
+    var miniTrack = function () { return miniTracks[miniIndex] || {}; };
+    var miniArtistText = function (track) {
+      return [track.artist || 'RegulusApple · playlist', track.year].filter(Boolean).join(' · ');
+    };
+    var renderMiniTrack = function () {
+      var track = miniTrack();
+      var hasAudio = Boolean(track.audio);
+      if (miniTitle) miniTitle.textContent = track.title || '选择一首歌';
+      if (miniArtist) miniArtist.textContent = miniArtistText(track);
+      if (miniState) miniState.textContent = hasAudio ? '可播放' : '待接入';
+      if (miniPlay) {
+        miniPlay.disabled = !hasAudio;
+        miniPlay.querySelector('span').textContent = miniAudio && !miniAudio.paused ? 'Ⅱ' : '▶';
+        miniPlay.setAttribute('aria-label', hasAudio ? (miniAudio && !miniAudio.paused ? '暂停当前歌曲' : '播放当前歌曲') : '音频待接入');
+      }
+      if (miniAudio) {
+        if (hasAudio) {
+          if (miniAudio.getAttribute('src') !== track.audio) {
+            miniAudio.src = track.audio;
+            miniAudio.load();
+          }
+        } else {
+          miniAudio.removeAttribute('src');
+          miniAudio.load();
+        }
+      }
+    };
+    var playMiniTrack = function () {
+      var track = miniTrack();
+      if (!track.audio || !miniAudio) return;
+      if (miniAudio.paused) miniAudio.play().catch(function () {});
+      else miniAudio.pause();
+    };
+    var nextMiniTrack = function () {
+      if (!miniTracks.length) return;
+      var wasPlaying = miniAudio && !miniAudio.paused;
+      miniIndex = (miniIndex + 1) % miniTracks.length;
+      renderMiniTrack();
+      if (wasPlaying && miniTrack().audio && miniAudio) miniAudio.play().catch(function () {});
+    };
+    if (miniPlay) miniPlay.addEventListener('click', playMiniTrack);
+    if (miniNext) miniNext.addEventListener('click', nextMiniTrack);
+    if (miniAudio) {
+      miniAudio.addEventListener('play', renderMiniTrack);
+      miniAudio.addEventListener('pause', renderMiniTrack);
+      miniAudio.addEventListener('ended', nextMiniTrack);
+      miniAudio.addEventListener('error', function () {
+        if (miniState) miniState.textContent = '音频不可用';
+      });
+    }
+    renderMiniTrack();
+  }
 
   var navGroups = Array.from(document.querySelectorAll('[data-nav-group]'));
   var subnavPanels = Array.from(document.querySelectorAll('[data-subnav-panel]'));
@@ -110,8 +210,8 @@
     var setNavGroup = function (groupKey, shouldShowPanel) {
       navGroups.forEach(function (button) {
         var isActive = button.dataset.navGroup === groupKey;
-        button.classList.toggle('is-active', isActive);
-        button.setAttribute('aria-expanded', String(isActive));
+        button.classList.toggle('is-active', isActive && shouldShowPanel);
+        button.setAttribute('aria-expanded', String(isActive && shouldShowPanel));
       });
       subnavPanels.forEach(function (panel) {
         var isActive = panel.dataset.subnavPanel === groupKey;
@@ -135,7 +235,7 @@
     var scheduleHide = function () {
       cancelHide();
       hideTimer = window.setTimeout(function () {
-        subnavPanels.forEach(function (panel) { panel.hidden = true; });
+        setNavGroup(null, false);
       }, 140);
     };
     var showNavGroup = function (button) {
@@ -214,6 +314,7 @@
     var headings = articleBody.querySelectorAll('h2, h3');
     if (headings.length) {
       toc.innerHTML = '';
+      var tocEntries = [];
       headings.forEach(function (heading, index) {
         var id = heading.id || 'section-' + (index + 1);
         heading.id = id;
@@ -222,7 +323,30 @@
         link.className = heading.tagName.toLowerCase() === 'h3' ? 'toc-subitem' : '';
         link.innerHTML = '<span>' + String(index + 1).padStart(2, '0') + '</span>' + escapeHtml(heading.textContent);
         toc.appendChild(link);
+        tocEntries.push({ heading: heading, link: link, isSubitem: heading.tagName.toLowerCase() === 'h3' });
       });
+
+      var updateTocState = function () {
+        var topOffset = 122;
+        var viewportBottom = window.innerHeight;
+        var visibleEntries = tocEntries.filter(function (entry) {
+          var rect = entry.heading.getBoundingClientRect();
+          return rect.bottom > topOffset && rect.top < viewportBottom;
+        });
+        var currentEntry = visibleEntries.slice().sort(function (a, b) {
+          return a.heading.getBoundingClientRect().top - b.heading.getBoundingClientRect().top;
+        })[0] || null;
+
+        tocEntries.forEach(function (entry) {
+          var isVisible = visibleEntries.indexOf(entry) !== -1;
+          entry.link.classList.toggle('is-visible', isVisible);
+          entry.link.classList.toggle('is-current', entry === currentEntry);
+        });
+      };
+
+      updateTocState();
+      window.addEventListener('scroll', updateTocState, { passive: true });
+      window.addEventListener('resize', updateTocState);
     }
 
     articleBody.querySelectorAll('img').forEach(function (image) {
