@@ -17,6 +17,8 @@ const statsPage = await readFile('public/stats/index.html', 'utf8');
 const messagePage = await readFile('public/message/index.html', 'utf8');
 const musicPage = await readFile('public/music/index.html', 'utf8');
 const readingPage = await readFile('public/reading/index.html', 'utf8');
+const categoriesPage = await readFile('public/categories/index.html', 'utf8');
+const tagsPage = await readFile('public/tags/index.html', 'utf8');
 const generatedScript = await readFile('public/js/main.js', 'utf8');
 const manifest = JSON.parse(await readFile('public/manifest.webmanifest', 'utf8'));
 
@@ -50,6 +52,14 @@ for (const marker of ['related-card', 'article-comments', 'comments-placeholder'
 
 if (!statsPage.includes('year-chart') || !messagePage.includes('留言板已经准备好了')) {
   throw new Error('Generated statistics or message page is missing.');
+}
+
+if (!categoriesPage.includes('taxonomy-index-card') || !categoriesPage.includes('学习')) {
+  throw new Error('Generated category index page is missing.');
+}
+
+if (!tagsPage.includes('taxonomy-index-card') || !tagsPage.includes('记录')) {
+  throw new Error('Generated tag index page is missing.');
 }
 
 for (const marker of ['music-audio', 'playlist', 'data-music-player']) {

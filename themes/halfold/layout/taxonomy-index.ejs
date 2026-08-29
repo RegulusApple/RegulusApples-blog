@@ -1,0 +1,39 @@
+<%
+  const taxonomyType = page.taxonomy === 'tag' ? 'tag' : 'category';
+  const entriesByName = {};
+  site.posts.each(function (post) {
+    const terms = taxonomyType === 'tag' ? post.tags : post.categories;
+    if (!terms) return;
+    terms.each(function (term) {
+      entriesByName[term.name] = (entriesByName[term.name] || 0) + 1;
+    });
+  });
+  const entries = Object.entries(entriesByName).sort(function (a, b) {
+    return b[1] - a[1] || a[0].localeCompare(b[0]);
+  });
+  const isTag = taxonomyType === 'tag';
+  const basePath = isTag ? '/tags/' : '/categories/';
+%>
+<section class="content-section taxonomy-index-page">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">article / <%= isTag ? 'tags' : 'categories' %></p>
+      <h1><%= isTag ? '反复出现的词' : '文章的几个方向' %><br><em><%= isTag ? '把思考串起来。' : '让好奇心有处可去。' %></em></h1>
+    </div>
+    <span><%= entries.length %> 个<%= isTag ? '标签' : '分类' %></span>
+  </div>
+
+  <% if (entries.length) { %>
+    <div class="taxonomy-index-grid">
+      <% entries.forEach(function (entry, index) { %>
+        <a class="taxonomy-index-card" href="<%- url_for(basePath + entry[0] + '/') %>">
+          <span class="taxonomy-index-number"><%= String(index + 1).padStart(2, '0') %></span>
+          <span class="taxonomy-index-copy"><b><%= entry[0] %></b><small><%= entry[1] %> 篇记录</small></span>
+          <i aria-hidden="true">↗</i>
+        </a>
+      <% }); %>
+    </div>
+  <% } else { %>
+    <p class="taxonomy-empty">还没有可以归入这里的记录。</p>
+  <% } %>
+</section>
