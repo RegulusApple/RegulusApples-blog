@@ -98,9 +98,10 @@ html[data-theme='dark'] .global-bar { background: rgba(33, 27, 53, .9); }
 .theme-toggle:hover, .theme-toggle:focus-visible { color: white; border-color: var(--purple); background: var(--purple); }
 .theme-toggle span { font-size: 15px; line-height: 1; }
 .section-nav { border-top: 1px solid var(--line); }
-.section-nav-inner { width: min(1500px, calc(100% - 56px)); min-height: 62px; margin: auto; display: flex; align-items: center; justify-content: center; }
+.section-nav-inner { position: relative; width: min(1500px, calc(100% - 56px)); min-height: 62px; margin: auto; display: flex; align-items: center; justify-content: flex-start; }
 .subnav-panel { display: flex; align-items: center; gap: 3px; padding: 4px; border: 1px solid var(--purple-soft); border-radius: 999px; background: rgba(255, 255, 255, .45); box-shadow: 0 8px 24px rgba(77, 55, 124, .08); }
 .subnav-panel[hidden] { display: none; }
+.subnav-panel:not([hidden]) { position: absolute; top: 50%; left: var(--subnav-center, 50%); transform: translate(-50%, -50%); }
 .subnav-panel a { padding: 9px 15px; color: var(--purple); border-radius: 999px; font-size: 12px; font-weight: 800; white-space: nowrap; }
 .subnav-panel a:hover, .subnav-panel a:focus-visible, .subnav-panel a.is-active { color: white; background: var(--purple); }
 html[data-theme='dark'] .subnav-panel { background: rgba(43, 35, 66, .72); box-shadow: 0 8px 24px rgba(10, 7, 20, .16); }

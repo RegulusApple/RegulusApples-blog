@@ -81,6 +81,7 @@
   var navGroups = Array.from(document.querySelectorAll('[data-nav-group]'));
   var subnavPanels = Array.from(document.querySelectorAll('[data-subnav-panel]'));
   if (navGroups.length && subnavPanels.length) {
+    var sectionNavInner = document.querySelector('.section-nav-inner');
     var normalizePath = function (path) {
       var normalized = String(path || '/').split('?')[0].replace(/\/+$/, '');
       return normalized || '/';
@@ -95,7 +96,18 @@
       var targetPath = normalizePath(path);
       return targetPath === '/' ? currentPath === '/' : currentPath === targetPath || currentPath.indexOf(targetPath + '/') === 0;
     };
-    var setNavGroup = function (groupKey) {
+    var positionSubnav = function (button, panel) {
+      if (!sectionNavInner || !button || !panel) return;
+      var innerRect = sectionNavInner.getBoundingClientRect();
+      var buttonRect = button.getBoundingClientRect();
+      var panelRect = panel.getBoundingClientRect();
+      var center = buttonRect.left + buttonRect.width / 2 - innerRect.left;
+      var halfPanel = panelRect.width / 2;
+      var minCenter = halfPanel + 8;
+      var maxCenter = innerRect.width - halfPanel - 8;
+      panel.style.setProperty('--subnav-center', Math.max(minCenter, Math.min(maxCenter, center)) + 'px');
+    };
+    var setNavGroup = function (groupKey, shouldShowPanel) {
       navGroups.forEach(function (button) {
         var isActive = button.dataset.navGroup === groupKey;
         button.classList.toggle('is-active', isActive);
@@ -103,19 +115,49 @@
       });
       subnavPanels.forEach(function (panel) {
         var isActive = panel.dataset.subnavPanel === groupKey;
-        panel.hidden = !isActive;
+        panel.hidden = !(isActive && shouldShowPanel);
         panel.querySelectorAll('a[data-nav-path]').forEach(function (link) {
           link.classList.toggle('is-active', isActive && isNavPathActive(link.dataset.navPath));
           if (isActive && isNavPathActive(link.dataset.navPath)) link.setAttribute('aria-current', 'page');
           else link.removeAttribute('aria-current');
         });
+        if (isActive && shouldShowPanel) {
+          var button = navGroups.find(function (navButton) { return navButton.dataset.navGroup === groupKey; });
+          positionSubnav(button, panel);
+        }
       });
     };
+    var hideTimer = null;
+    var cancelHide = function () {
+      if (hideTimer) window.clearTimeout(hideTimer);
+      hideTimer = null;
+    };
+    var scheduleHide = function () {
+      cancelHide();
+      hideTimer = window.setTimeout(function () {
+        subnavPanels.forEach(function (panel) { panel.hidden = true; });
+      }, 140);
+    };
+    var showNavGroup = function (button) {
+      cancelHide();
+      setNavGroup(button.dataset.navGroup, true);
+    };
     navGroups.forEach(function (button) {
-      button.addEventListener('mouseenter', function () { setNavGroup(button.dataset.navGroup); });
-      button.addEventListener('focus', function () { setNavGroup(button.dataset.navGroup); });
+      button.addEventListener('mouseenter', function () { showNavGroup(button); });
+      button.addEventListener('mouseleave', scheduleHide);
+      button.addEventListener('focus', function () { showNavGroup(button); });
     });
-    setNavGroup(getNavGroupForPath(currentPath));
+    subnavPanels.forEach(function (panel) {
+      panel.addEventListener('mouseenter', cancelHide);
+      panel.addEventListener('mouseleave', scheduleHide);
+    });
+    setNavGroup(getNavGroupForPath(currentPath), false);
+    window.addEventListener('resize', function () {
+      var visiblePanel = subnavPanels.find(function (panel) { return !panel.hidden; });
+      if (!visiblePanel) return;
+      var button = navGroups.find(function (navButton) { return navButton.dataset.navGroup === visiblePanel.dataset.subnavPanel; });
+      positionSubnav(button, visiblePanel);
+    });
   }
 
   var themeToggle = document.getElementById('theme-toggle');
