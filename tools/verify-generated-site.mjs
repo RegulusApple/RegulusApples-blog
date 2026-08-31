@@ -56,7 +56,7 @@ for (const marker of ['<!doctype html>', '<meta charset="utf-8">', '把学习变
   assert(homepage.toLowerCase().includes(marker.toLowerCase()), `Generated site is missing required marker: ${marker}`);
 }
 
-for (const marker of ['.welcome-panel', '.search-form', '.article-body .highlight', "html[data-theme='dark'] .article-body pre"]) {
+for (const marker of ['.welcome-panel', '.search-form', '.article-body .highlight', "html[data-theme='dark'] .article-body pre", '#article-toc a.toc-subitem.is-revealed']) {
   assert(homepageStyle.includes(marker), `Generated stylesheet is missing required feature marker: ${marker}`);
 }
 
@@ -90,7 +90,7 @@ for (const marker of ['weekly-page', '周小结模板已经准备好']) {
   assert(weeklyPage.includes(marker), `Generated weekly page is missing required feature marker: ${marker}`);
 }
 
-for (const marker of ['giscus.app/client.js', 'data-music-player', 'searchOverlay', 'serviceWorker.register']) {
+for (const marker of ['giscus.app/client.js', 'data-music-player', 'searchOverlay', 'serviceWorker.register', 'hoveredEntry', 'moduleHovered', 'is-module-clear', 'is-revealed', 'mouseenter']) {
   assert(generatedScript.includes(marker), `Generated interaction script is missing required feature marker: ${marker}`);
 }
 
@@ -105,7 +105,8 @@ const cachedStyleVersion = serviceWorkerSource.match(/style\.css\?v=(\d+)/)?.[1]
 const cachedScriptVersion = serviceWorkerSource.match(/main\.js\?v=(\d+)/)?.[1];
 assert(styleVersion && styleVersion === cachedStyleVersion, 'Layout and service-worker CSS versions are out of sync.');
 assert(scriptVersion && scriptVersion === cachedScriptVersion, 'Layout and service-worker JavaScript versions are out of sync.');
-assert(serviceWorker.includes('halfold-blog-v9') && serviceWorker.includes(`/css/style.css?v=${styleVersion}`), 'Generated service worker is missing the current cache shell.');
+const cacheName = serviceWorkerSource.match(/CACHE_NAME\s*=\s*'([^']+)'/)?.[1];
+assert(cacheName && serviceWorker.includes(cacheName) && serviceWorker.includes(`/css/style.css?v=${styleVersion}`), 'Generated service worker is missing the current cache shell.');
 assert(serviceWorker.includes(`/js/main.js?v=${scriptVersion}`) && serviceWorker.includes('/search.json'), 'Generated service worker is missing current client assets.');
 assert(serviceWorker.includes("event.request.mode === 'navigate'"), 'Generated service worker is missing the network-first document strategy.');
 

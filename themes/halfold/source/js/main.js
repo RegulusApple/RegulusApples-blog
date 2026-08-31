@@ -364,21 +364,32 @@
 
   var articleBody = document.querySelector('.article-body');
   var toc = document.getElementById('article-toc');
+  var contentsWidget = toc ? toc.closest('.home-widget-contents') : null;
 
   if (articleBody && toc) {
-    var headings = articleBody.querySelectorAll('h2, h3');
+    var headings = articleBody.querySelectorAll('h2, h3, h4, h5, h6');
     if (headings.length) {
       toc.innerHTML = '';
       var tocEntries = [];
+      var parentStack = [];
+      var hoveredEntry = null;
+      var hoverClearTimer = null;
+      var moduleHovered = false;
       headings.forEach(function (heading, index) {
         var id = heading.id || 'section-' + (index + 1);
         heading.id = id;
         var link = document.createElement('a');
         link.href = '#' + id;
-        link.className = heading.tagName.toLowerCase() === 'h3' ? 'toc-subitem' : '';
-        link.innerHTML = '<span>' + String(index + 1).padStart(2, '0') + '</span>' + escapeHtml(heading.textContent);
+        var level = Number(heading.tagName.substring(1));
+        while (parentStack.length && parentStack[parentStack.length - 1].level >= level) parentStack.pop();
+        var parent = parentStack.length ? parentStack[parentStack.length - 1] : null;
+        var entry = { heading: heading, link: link, level: level, parent: parent, children: [] };
+        if (parent) parent.children.push(entry);
+        parentStack.push(entry);
+        link.className = 'toc-entry toc-level-' + level + (parent ? ' toc-subitem' : ' toc-root');
+        link.textContent = heading.textContent;
         toc.appendChild(link);
-        tocEntries.push({ heading: heading, link: link, isSubitem: heading.tagName.toLowerCase() === 'h3' });
+        tocEntries.push(entry);
       });
 
       var updateTocState = function () {
@@ -388,18 +399,69 @@
           var rect = entry.heading.getBoundingClientRect();
           return rect.bottom > topOffset && rect.top < viewportBottom;
         });
-        var currentEntry = visibleEntries.slice().sort(function (a, b) {
-          return a.heading.getBoundingClientRect().top - b.heading.getBoundingClientRect().top;
-        })[0] || null;
+        var passedEntries = tocEntries.filter(function (entry) {
+          return entry.heading.getBoundingClientRect().top <= topOffset + 24;
+        });
+        var currentEntry = passedEntries[passedEntries.length - 1] || visibleEntries[0] || null;
+        var activeEntry = hoveredEntry || currentEntry;
+        var activePath = [];
+        var pathEntry = activeEntry;
+        while (pathEntry) {
+          activePath.push(pathEntry);
+          pathEntry = pathEntry.parent;
+        }
 
         tocEntries.forEach(function (entry) {
+          var isRevealed = !entry.parent || activePath.indexOf(entry.parent) !== -1;
           var isVisible = visibleEntries.indexOf(entry) !== -1;
+          var isModuleClear = moduleHovered && isRevealed;
+          entry.link.classList.toggle('is-revealed', isRevealed);
           entry.link.classList.toggle('is-visible', isVisible);
-          entry.link.classList.toggle('is-current', entry === currentEntry);
+          entry.link.classList.toggle('is-module-clear', isModuleClear);
+          entry.link.classList.toggle('is-current', entry === activeEntry);
+          entry.link.classList.toggle('is-hovered', entry === hoveredEntry);
         });
       };
 
       updateTocState();
+      if (contentsWidget) {
+        contentsWidget.addEventListener('mouseenter', function () {
+          moduleHovered = true;
+          updateTocState();
+        });
+        contentsWidget.addEventListener('mouseleave', function () {
+          moduleHovered = false;
+          hoveredEntry = null;
+          if (hoverClearTimer) window.clearTimeout(hoverClearTimer);
+          updateTocState();
+        });
+      }
+      tocEntries.forEach(function (entry) {
+        entry.link.addEventListener('mouseenter', function () {
+          if (hoverClearTimer) window.clearTimeout(hoverClearTimer);
+          hoveredEntry = entry;
+          updateTocState();
+        });
+        entry.link.addEventListener('mouseleave', function () {
+          if (hoveredEntry !== entry) return;
+          hoverClearTimer = window.setTimeout(function () {
+            if (hoveredEntry === entry) {
+              hoveredEntry = null;
+              updateTocState();
+            }
+          }, 180);
+        });
+        entry.link.addEventListener('focus', function () {
+          if (hoverClearTimer) window.clearTimeout(hoverClearTimer);
+          hoveredEntry = entry;
+          updateTocState();
+        });
+        entry.link.addEventListener('blur', function () {
+          if (hoveredEntry !== entry) return;
+          hoveredEntry = null;
+          updateTocState();
+        });
+      });
       window.addEventListener('scroll', updateTocState, { passive: true });
       window.addEventListener('resize', updateTocState);
     }
