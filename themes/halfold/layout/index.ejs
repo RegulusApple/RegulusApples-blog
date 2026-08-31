@@ -1,8 +1,14 @@
+<%
+  const regularPosts = [];
+  page.posts.each(function (post) {
+    if (!post.weekly) regularPosts.push(post);
+  });
+%>
 <div class="homepage-workspace">
   <div class="homepage-main">
     <div class="signal-line">
       <span class="pulse"><i></i><strong>最近的一句话：</strong>今天也在练习把复杂的事说清楚。</span>
-      <span><%= String(site.posts.length).padStart(2, '0') %> notes · <%= new Date().getFullYear() %></span>
+      <span><%= String(regularPosts.length).padStart(2, '0') %> notes · <%= new Date().getFullYear() %></span>
     </div>
 
     <section class="welcome-panel" aria-labelledby="hero-title">
@@ -23,7 +29,7 @@
     <section id="recent-notes" class="content-section">
       <div class="section-heading">
         <div><p class="eyebrow">recent notes</p><h2>找到一些<br><em>值得留下的事。</em></h2></div>
-        <span data-category-count><%= site.posts.length %> 篇文章</span>
+        <span data-category-count><%= regularPosts.length %> 篇文章</span>
       </div>
 
       <div class="category-strip" aria-label="文章分类">
@@ -34,7 +40,7 @@
       </div>
 
       <div class="post-list">
-        <% page.posts.each(function (post, index) { %>
+        <% regularPosts.forEach(function (post, index) { %>
           <% const category = post.categories && post.categories.length ? post.categories.first().name : '记录'; %>
           <article class="post-row" data-post-path="<%= post.path %>" data-post-category="<%= category %>">
             <span class="post-number"><%= String(index + 1).padStart(2, '0') %></span>

@@ -1,0 +1,51 @@
+<%
+  const weeklyPosts = [];
+  const weeklyPaths = {};
+  const collectWeeklyPosts = function (collection) {
+    if (!collection || !collection.each) return;
+    collection.each(function (post) {
+      if (post.weekly && !weeklyPaths[post.path]) {
+        weeklyPaths[post.path] = true;
+        weeklyPosts.push(post);
+      }
+    });
+  };
+  collectWeeklyPosts(site.posts);
+  collectWeeklyPosts(site.drafts);
+  weeklyPosts.sort(function (a, b) { return b.date.valueOf() - a.date.valueOf(); });
+%>
+<section class="content-section weekly-page">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">blog / weekly</p>
+      <h1>把一周留下来。<br><em>再慢慢回看。</em></h1>
+    </div>
+    <span><%= weeklyPosts.length %> 个周小结</span>
+  </div>
+
+  <div class="weekly-intro">
+    <span class="weekly-intro-mark">W</span>
+    <p>每一周不必都得出结论。把做过的事、遇到的问题和还没想清楚的部分留下来，就已经是一种整理。</p>
+  </div>
+
+  <% if (weeklyPosts.length) { %>
+    <div class="weekly-list" aria-label="周小结时间轴">
+      <% weeklyPosts.forEach(function (post, index) { %>
+        <div class="weekly-timeline-entry">
+          <time class="weekly-date" datetime="<%= post.date.format('YYYY-MM-DD') %>"><%= post.date.format('MMDD') %></time>
+          <span class="weekly-node" aria-hidden="true"></span>
+          <a class="weekly-card" href="<%- url_for(post.path) %>">
+            <div class="weekly-card-main">
+              <p class="eyebrow">week note</p>
+              <h2><%= post.title %></h2>
+              <p><%= post.description || post.excerpt || '这一周，留下了一些值得回看的痕迹。' %></p>
+            </div>
+            <i aria-hidden="true">↗</i>
+          </a>
+        </div>
+      <% }); %>
+    </div>
+  <% } else { %>
+    <p class="weekly-empty">周小结模板已经准备好。写下第一篇周小结后，它会独立出现在这里，并且可以被搜索。</p>
+  <% } %>
+</section>

@@ -1,7 +1,15 @@
+<%
+  const searchableCount = [];
+  const weeklyCount = [];
+  site.posts.each(function (post) {
+    if (post.weekly) weeklyCount.push(post);
+    else searchableCount.push(post);
+  });
+%>
 <section class="content-section search-page" data-search-page data-search-path="<%- url_for('/search.json') %>">
   <div class="section-heading">
     <div><p class="eyebrow">search the notes</p><h1>搜索<br><em>留下的痕迹。</em></h1></div>
-    <span><%= site.posts.length %> 篇文章</span>
+    <span><%= searchableCount.length %> 篇博客 · <%= weeklyCount.length %> 个周小结可检索</span>
   </div>
 
   <form class="search-form" id="search-form" role="search">

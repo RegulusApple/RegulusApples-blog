@@ -1,6 +1,6 @@
 navigation:
   - key: articles
-    label: 文章
+    label: 博客
     items:
       - label: 全部文章
         path: /
@@ -10,6 +10,8 @@ navigation:
         path: /categories/
       - label: 标签
         path: /tags/
+      - label: 周小结
+        path: /weekly/
       - label: 搜索
         path: /search/
   - key: memory

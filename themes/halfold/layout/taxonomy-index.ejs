@@ -2,6 +2,7 @@
   const taxonomyType = page.taxonomy === 'tag' ? 'tag' : 'category';
   const entriesByName = {};
   site.posts.each(function (post) {
+    if (post.weekly) return;
     const terms = taxonomyType === 'tag' ? post.tags : post.categories;
     if (!terms) return;
     terms.each(function (term) {

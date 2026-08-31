@@ -1,5 +1,5 @@
-const CACHE_NAME = 'halfold-blog-v8';
-const APP_SHELL = ['/', '/css/style.css', '/js/main.js?v=8', '/favicon.svg', '/manifest.webmanifest'];
+const CACHE_NAME = 'halfold-blog-v9';
+const APP_SHELL = ['/', '/css/style.css?v=26', '/js/main.js?v=16', '/favicon.svg', '/manifest.webmanifest', '/search.json'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));

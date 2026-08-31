@@ -12,6 +12,8 @@
     "dev": "hexo server",
     "start": "hexo server",
     "new": "hexo new post",
+    "new:weekly": "hexo new weekly-post",
+    "verify": "node tools/verify-generated-site.mjs",
     "deploy": "hexo deploy"
   },
   "dependencies": {
@@ -21,6 +23,7 @@
     "hexo-generator-archive": "^2.0.0",
     "hexo-generator-category": "^2.0.0",
     "hexo-generator-index": "^4.0.0",
+    "hexo-pagination": "^3.0.0",
     "hexo-generator-search": "^2.4.3",
     "hexo-generator-tag": "^2.0.0",
     "hexo-renderer-ejs": "^2.0.0",

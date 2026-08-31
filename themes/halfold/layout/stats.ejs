@@ -7,6 +7,7 @@
     return String(post.content || '').replace(/<[^>]*>/g, '').replace(/\s/g, '').length;
   };
   site.posts.each(function (post) {
+    if (post.weekly) return;
     posts.push(post);
     const year = post.date.format('YYYY');
     yearCounts[year] = (yearCounts[year] || 0) + 1;

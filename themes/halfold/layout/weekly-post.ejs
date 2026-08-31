@@ -1,0 +1,16 @@
+<section class="content-section weekly-detail-page">
+  <div class="weekly-detail-topline">
+    <a href="<%- url_for('/weekly/') %>">← 返回周小结</a>
+    <span><%= page.date.format('YYYY.MM.DD') %></span>
+  </div>
+  <header class="weekly-detail-header">
+    <p class="eyebrow">weekly note</p>
+    <h1><%= page.title %></h1>
+    <% if (page.description) { %><p><%= page.description %></p><% } %>
+  </header>
+  <div class="markdown-content"><%- page.content %></div>
+  <footer class="weekly-detail-footer">
+    <a href="<%- url_for('/weekly/') %>">← 返回周小结列表</a>
+    <span>Record · Reflect · Continue</span>
+  </footer>
+</section>

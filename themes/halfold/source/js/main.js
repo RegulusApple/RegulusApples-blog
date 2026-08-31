@@ -178,6 +178,61 @@
     renderMiniTrack();
   }
 
+  var monthlyTrace = document.querySelector('[data-monthly-trace]');
+  if (monthlyTrace) {
+    var monthlyTraceDataNode = monthlyTrace.querySelector('[data-monthly-trace-data]');
+    var monthlyTraceData = [];
+    try { monthlyTraceData = JSON.parse(monthlyTraceDataNode ? monthlyTraceDataNode.textContent || '[]' : '[]'); } catch (error) { monthlyTraceData = []; }
+    var monthlyTraceMonthView = monthlyTrace.querySelector('[data-monthly-month-view]');
+    var monthlyTraceSummary = monthlyTrace.querySelector('[data-monthly-summary]');
+    var monthlyTraceSummaryTitle = monthlyTrace.querySelector('[data-monthly-summary-title]');
+    var monthlyTraceSummaryList = monthlyTrace.querySelector('[data-monthly-summary-list]');
+    var monthlyTraceBack = monthlyTrace.querySelector('[data-monthly-back]');
+    var monthlyTraceYear = monthlyTrace.querySelector('.home-widget-heading > span');
+    var monthlyTraceButtons = Array.from(monthlyTrace.querySelectorAll('[data-monthly-month]'));
+    var resetMonthlyTrace = function () {
+      if (monthlyTraceMonthView) monthlyTraceMonthView.hidden = false;
+      if (monthlyTraceSummary) monthlyTraceSummary.hidden = true;
+      monthlyTrace.classList.remove('is-browsing');
+      monthlyTraceButtons.forEach(function (button) { button.classList.remove('is-active'); });
+    };
+    var renderMonthlySummary = function (month) {
+      var selectedMonth = monthlyTraceData.find(function (item) { return item.month === month && item.posts && item.posts.length; });
+      if (!selectedMonth || !monthlyTraceSummaryList) return;
+      monthlyTraceButtons.forEach(function (button) { button.classList.toggle('is-active', button.dataset.monthlyMonth === month); });
+      if (monthlyTraceSummaryTitle) monthlyTraceSummaryTitle.textContent = month + ' / WEEK NOTES';
+      monthlyTraceSummaryList.innerHTML = selectedMonth.posts.map(function (post) {
+        return '<a class="monthly-trace-entry" href="' + escapeHtml(post.url) + '">' +
+          '<time datetime="' + escapeHtml(post.isoDate) + '">' + escapeHtml(post.date) + '</time>' +
+          '<span><strong>' + escapeHtml(post.title) + '</strong><small>' + escapeHtml(post.description) + '</small></span>' +
+          '</a>';
+      }).join('');
+      if (monthlyTraceMonthView) monthlyTraceMonthView.hidden = true;
+      if (monthlyTraceSummary) monthlyTraceSummary.hidden = false;
+      monthlyTrace.classList.add('is-browsing');
+    };
+    monthlyTraceButtons.forEach(function (button) {
+      button.addEventListener('click', function () { renderMonthlySummary(button.dataset.monthlyMonth); });
+    });
+    if (monthlyTraceBack) monthlyTraceBack.addEventListener('click', resetMonthlyTrace);
+    monthlyTrace.addEventListener('mouseenter', function () { monthlyTrace.classList.add('is-hovered'); });
+    monthlyTrace.addEventListener('mouseleave', function () {
+      window.setTimeout(function () {
+        if (monthlyTrace.matches(':hover')) return;
+        monthlyTrace.classList.remove('is-hovered');
+        resetMonthlyTrace();
+      }, 120);
+    });
+    monthlyTrace.addEventListener('focusin', function () { monthlyTrace.classList.add('is-hovered'); });
+    monthlyTrace.addEventListener('focusout', function (event) {
+      if (event.relatedTarget && !monthlyTrace.contains(event.relatedTarget)) {
+        monthlyTrace.classList.remove('is-hovered');
+        resetMonthlyTrace();
+      }
+    });
+    if (monthlyTraceYear) monthlyTraceYear.setAttribute('aria-label', '当前周小结年份');
+  }
+
   var navGroups = Array.from(document.querySelectorAll('[data-nav-group]'));
   var subnavPanels = Array.from(document.querySelectorAll('[data-subnav-panel]'));
   if (navGroups.length && subnavPanels.length) {
@@ -402,6 +457,7 @@
 
     function safeUrl(value) {
       var url = String(value || '#');
+      if (/^\/\//.test(url)) url = url.slice(1);
       return /^(\/|https?:\/\/)/i.test(url) ? url : '#';
     }
 
@@ -429,7 +485,9 @@
         var title = escapeHtml(entry.title || '未命名文章');
         var date = escapeHtml(entry.date || '');
         var description = escapeHtml(entry.description || entrySnippet(entry, query));
-        return '<article class="search-result"><p class="post-meta"><span>' + date + '</span><span>文章</span></p><h2><a href="' + escapeHtml(safeUrl(entry.url)) + '">' + title + '</a></h2><p>' + description + '</p></article>';
+        var entryUrl = String(entry.url || '').replace(/^\/+/, '/');
+        var typeLabel = entryUrl.indexOf('/weekly/') === 0 ? '周小结' : '文章';
+        return '<article class="search-result"><p class="post-meta"><span>' + date + '</span><span>' + typeLabel + '</span></p><h2><a href="' + escapeHtml(safeUrl(entry.url)) + '">' + title + '</a></h2><p>' + description + '</p></article>';
       }).join('');
     }
 

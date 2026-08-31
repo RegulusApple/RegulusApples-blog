@@ -34,12 +34,75 @@
       <div class="home-widget-heading"><h2 id="contents-widget-title">Contents</h2></div>
       <nav id="article-toc" aria-label="文章目录"><span class="toc-empty">滚动查看目录</span></nav>
     </section>
+  <% } else if (page.layout === 'weekly' || String(page.path || '').indexOf('weekly/') === 0) { %>
+    <%
+      const monthlyTracePosts = [];
+      const monthlyTracePaths = {};
+      const collectMonthlyTracePosts = function (collection) {
+        if (!collection || !collection.each) return;
+        collection.each(function (post) {
+          if (post.weekly && !monthlyTracePaths[post.path]) {
+            monthlyTracePaths[post.path] = true;
+            monthlyTracePosts.push(post);
+          }
+        });
+      };
+      collectMonthlyTracePosts(site.posts);
+      collectMonthlyTracePosts(site.drafts);
+      monthlyTracePosts.sort(function (a, b) { return b.date.valueOf() - a.date.valueOf(); });
+      const monthlyTraceYear = monthlyTracePosts.length ? monthlyTracePosts[0].date.format('YYYY') : String(new Date().getFullYear());
+      const monthlyTraceMonths = Array.from({ length: 12 }, function (_, index) {
+        const month = String(index + 1).padStart(2, '0');
+        return {
+          month: month,
+          posts: monthlyTracePosts.filter(function (post) {
+            return post.date.format('YYYY') === monthlyTraceYear && post.date.format('MM') === month;
+          }).map(function (post) {
+            return {
+              date: post.date.format('MMDD'),
+              isoDate: post.date.format('YYYY-MM-DD'),
+              title: post.title,
+              description: post.description || post.excerpt || '这一周，留下了一些值得回看的痕迹。',
+              url: url_for(post.path)
+            };
+          })
+        };
+      });
+    %>
+    <section class="home-widget home-widget-monthly-trace" data-monthly-trace aria-labelledby="monthly-trace-title">
+      <div class="home-widget-heading">
+        <h2 id="monthly-trace-title">Monthly Trace</h2>
+        <span><%= monthlyTraceYear %></span>
+      </div>
+      <div class="monthly-trace-body">
+        <div class="monthly-trace-month-view" data-monthly-month-view>
+          <p class="monthly-trace-caption">选择一个月份，回看这一段时间留下的周小结。</p>
+          <div class="monthly-trace-month-grid" aria-label="<%= monthlyTraceYear %> 年月份">
+            <% monthlyTraceMonths.forEach(function (item) { %>
+              <button type="button" class="monthly-trace-month<%= item.posts.length ? ' has-notes' : ' is-empty' %>" data-monthly-month="<%= item.month %>"<%= item.posts.length ? '' : ' disabled' %> aria-label="<%= monthlyTraceYear %> 年 <%= item.month %> 月<%= item.posts.length ? '，有周小结' : '，暂无周小结' %>">
+                <span><%= item.month %></span>
+                <small><%= item.posts.length ? item.posts.length + ' note' + (item.posts.length > 1 ? 's' : '') : '—' %></small>
+              </button>
+            <% }); %>
+          </div>
+        </div>
+        <div class="monthly-trace-summary" data-monthly-summary hidden>
+          <div class="monthly-trace-summary-heading">
+            <button type="button" data-monthly-back aria-label="返回月份选择">←</button>
+            <strong data-monthly-summary-title></strong>
+          </div>
+          <div class="monthly-trace-summary-list" data-monthly-summary-list></div>
+        </div>
+      </div>
+      <script type="application/json" data-monthly-trace-data><%- JSON.stringify(monthlyTraceMonths) %></script>
+    </section>
   <% } else { %>
     <%
       const archivePosts = [];
       const archiveYearCounts = {};
       let archiveWordCount = 0;
       site.posts.each(function (post) {
+        if (post.weekly) return;
         archivePosts.push(post);
         const year = post.date.format('YYYY');
         archiveYearCounts[year] = (archiveYearCounts[year] || 0) + 1;
