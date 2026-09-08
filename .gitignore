@@ -27,3 +27,15 @@ npm-debug.log*
 
 # Existing local packaging artifacts
 *.tar.gz
+
+# Work products that do not belong to the Hexo blog
+/.codex-*/
+/.codex_tmp/
+/.tmp_*/
+/__pycache__/
+/.Xil/
+/app/
+/tmp/
+/build_internship_materials.py
+/update_diary.py
+/dfx_runtime.txt
