@@ -391,7 +391,9 @@ html[data-theme='dark'] .markdown-content .highlight { background: #171125; colo
 #article-toc a.toc-subitem.is-revealed { max-height: 8em; margin-top: 10px; opacity: .52; transform: translateY(0); pointer-events: auto; }
 #article-toc a.toc-subitem.is-revealed.is-module-clear { opacity: 1; }
 #article-toc a.toc-subitem.is-revealed.is-current { opacity: 1; }
-.home-widget-contents.is-expanded #article-toc a { transition: none; }
+.home-widget-contents.is-expanded #article-toc a {
+  transition: max-height .42s ease, margin-top .42s ease, color .25s ease, filter .32s ease, opacity .38s ease, transform .42s ease;
+}
 .toc-empty { color: var(--muted); font-size: 12px; }
 @keyframes toc-enter {
   from { opacity: 0; transform: translateY(-4px); }
