@@ -30,10 +30,7 @@
   </section>
 
   <% if (page.layout === 'post') { %>
-    <section class="home-widget home-widget-contents" aria-labelledby="contents-widget-title">
-      <div class="home-widget-heading"><h2 id="contents-widget-title">Contents</h2></div>
-      <nav id="article-toc" aria-label="文章目录"><span class="toc-empty">滚动查看目录</span></nav>
-    </section>
+    <% /* The article table of contents is rendered in the right rail by layout.ejs. */ %>
   <% } else if (page.layout === 'weekly' || String(page.path || '').indexOf('weekly/') === 0) { %>
     <%
       const monthlyTracePosts = [];
