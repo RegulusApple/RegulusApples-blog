@@ -386,11 +386,12 @@ html[data-theme='dark'] .markdown-content .highlight { background: #171125; colo
 #article-toc a:first-child { margin-top: 0; }
 #article-toc a:hover, #article-toc a:focus-visible { color: var(--orange); filter: none; opacity: 1; font-weight: 800; }
 #article-toc a.is-module-clear { color: var(--purple); filter: none; opacity: 1; }
-#article-toc a.is-current { color: var(--orange); filter: none; opacity: 1; font-weight: 800; }
+#article-toc a.is-current, #article-toc a.is-hovered { color: var(--orange); filter: none; opacity: 1; font-weight: 800; }
 #article-toc a.toc-subitem { max-height: 0; margin-top: 0; padding-left: 18px; font-size: 13px; opacity: 0; transform: translateY(-6px); pointer-events: none; overflow: hidden; }
 #article-toc a.toc-subitem.is-revealed { max-height: 8em; margin-top: 10px; opacity: .52; transform: translateY(0); pointer-events: auto; }
 #article-toc a.toc-subitem.is-revealed.is-module-clear { opacity: 1; }
-#article-toc a.toc-subitem.is-revealed.is-current { opacity: 1; }
+#article-toc a.toc-subitem.is-revealed.is-current,
+#article-toc a.toc-subitem.is-revealed.is-hovered { opacity: 1; }
 .home-widget-contents.is-expanded #article-toc a {
   transition: max-height .42s ease, margin-top .42s ease, color .25s ease, filter .32s ease, opacity .38s ease, transform .42s ease;
 }
@@ -570,21 +571,19 @@ html[data-theme='dark'] .article-body code { color: var(--purple-deep); backgrou
 
 @media (min-width: 1001px) and (max-width: 1180px) {
   .page-post .site-sidebar,
-  .page-post .home-widget-contents { width: 220px; }
+  .page-post .article-toc-sidebar { width: 220px; }
 }
 
 @media (min-width: 1001px) {
   .page-post .site-sidebar,
-  .page-post .home-widget-contents {
-    position: fixed;
+  .page-post .article-toc-sidebar {
+    position: sticky;
     top: 122px;
     z-index: 5;
-    width: 270px;
     max-height: calc(100vh - 150px);
     overflow-y: auto;
   }
-  .page-post .site-sidebar { left: max(28px, calc((100vw - 1500px) / 2)); }
-  .page-post .home-widget-contents { right: max(28px, calc((100vw - 1500px) / 2)); }
+  .page-post .home-widget-contents { position: static; }
 }
 
 @media (max-width: 1000px) {

@@ -372,6 +372,7 @@
       toc.innerHTML = '';
       var tocEntries = [];
       var parentStack = [];
+      var hoveredEntry = null;
       var moduleHovered = false;
       headings.forEach(function (heading, index) {
         var id = heading.id || 'section-' + (index + 1);
@@ -401,8 +402,9 @@
           return entry.heading.getBoundingClientRect().top <= topOffset + 24;
         });
         var currentEntry = passedEntries[passedEntries.length - 1] || visibleEntries[0] || null;
+        var activeEntry = hoveredEntry || currentEntry;
         var activePath = [];
-        var pathEntry = currentEntry;
+        var pathEntry = activeEntry;
         while (pathEntry) {
           activePath.push(pathEntry);
           pathEntry = pathEntry.parent;
@@ -415,7 +417,8 @@
           entry.link.classList.toggle('is-revealed', isRevealed);
           entry.link.classList.toggle('is-visible', isVisible);
           entry.link.classList.toggle('is-module-clear', isModuleClear);
-          entry.link.classList.toggle('is-current', entry === currentEntry);
+          entry.link.classList.toggle('is-current', entry === activeEntry);
+          entry.link.classList.toggle('is-hovered', entry === hoveredEntry);
         });
         if (contentsWidget) contentsWidget.classList.toggle('is-expanded', moduleHovered);
       };
@@ -428,9 +431,30 @@
         });
         contentsWidget.addEventListener('mouseleave', function () {
           moduleHovered = false;
+          hoveredEntry = null;
           updateTocState();
         });
       }
+      tocEntries.forEach(function (entry) {
+        entry.link.addEventListener('mouseenter', function () {
+          hoveredEntry = entry;
+          updateTocState();
+        });
+        entry.link.addEventListener('mouseleave', function () {
+          if (hoveredEntry !== entry) return;
+          hoveredEntry = null;
+          updateTocState();
+        });
+        entry.link.addEventListener('focus', function () {
+          hoveredEntry = entry;
+          updateTocState();
+        });
+        entry.link.addEventListener('blur', function () {
+          if (hoveredEntry !== entry) return;
+          hoveredEntry = null;
+          updateTocState();
+        });
+      });
       window.addEventListener('scroll', updateTocState, { passive: true });
       window.addEventListener('resize', updateTocState);
     }
