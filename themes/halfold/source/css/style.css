@@ -569,13 +569,12 @@ html[data-theme='dark'] .article-body code { color: var(--purple-deep); backgrou
 }
 
 @media (min-width: 1001px) and (max-width: 1180px) {
-  .page-post .home-widget-player,
+  .page-post .site-sidebar,
   .page-post .home-widget-contents { width: 220px; }
 }
 
 @media (min-width: 1001px) {
-  .page-post .profile-card { display: none; }
-  .page-post .home-widget-player,
+  .page-post .site-sidebar,
   .page-post .home-widget-contents {
     position: fixed;
     top: 122px;
@@ -584,7 +583,7 @@ html[data-theme='dark'] .article-body code { color: var(--purple-deep); backgrou
     max-height: calc(100vh - 150px);
     overflow-y: auto;
   }
-  .page-post .home-widget-player { left: max(28px, calc((100vw - 1500px) / 2)); }
+  .page-post .site-sidebar { left: max(28px, calc((100vw - 1500px) / 2)); }
   .page-post .home-widget-contents { right: max(28px, calc((100vw - 1500px) / 2)); }
 }
 
