@@ -372,8 +372,6 @@
       toc.innerHTML = '';
       var tocEntries = [];
       var parentStack = [];
-      var hoveredEntry = null;
-      var hoverClearTimer = null;
       var moduleHovered = false;
       headings.forEach(function (heading, index) {
         var id = heading.id || 'section-' + (index + 1);
@@ -403,24 +401,23 @@
           return entry.heading.getBoundingClientRect().top <= topOffset + 24;
         });
         var currentEntry = passedEntries[passedEntries.length - 1] || visibleEntries[0] || null;
-        var activeEntry = hoveredEntry || currentEntry;
         var activePath = [];
-        var pathEntry = activeEntry;
+        var pathEntry = currentEntry;
         while (pathEntry) {
           activePath.push(pathEntry);
           pathEntry = pathEntry.parent;
         }
 
         tocEntries.forEach(function (entry) {
-          var isRevealed = !entry.parent || activePath.indexOf(entry.parent) !== -1;
+          var isRevealed = moduleHovered || !entry.parent || activePath.indexOf(entry.parent) !== -1;
           var isVisible = visibleEntries.indexOf(entry) !== -1;
           var isModuleClear = moduleHovered && isRevealed;
           entry.link.classList.toggle('is-revealed', isRevealed);
           entry.link.classList.toggle('is-visible', isVisible);
           entry.link.classList.toggle('is-module-clear', isModuleClear);
-          entry.link.classList.toggle('is-current', entry === activeEntry);
-          entry.link.classList.toggle('is-hovered', entry === hoveredEntry);
+          entry.link.classList.toggle('is-current', entry === currentEntry);
         });
+        if (contentsWidget) contentsWidget.classList.toggle('is-expanded', moduleHovered);
       };
 
       updateTocState();
@@ -431,37 +428,9 @@
         });
         contentsWidget.addEventListener('mouseleave', function () {
           moduleHovered = false;
-          hoveredEntry = null;
-          if (hoverClearTimer) window.clearTimeout(hoverClearTimer);
           updateTocState();
         });
       }
-      tocEntries.forEach(function (entry) {
-        entry.link.addEventListener('mouseenter', function () {
-          if (hoverClearTimer) window.clearTimeout(hoverClearTimer);
-          hoveredEntry = entry;
-          updateTocState();
-        });
-        entry.link.addEventListener('mouseleave', function () {
-          if (hoveredEntry !== entry) return;
-          hoverClearTimer = window.setTimeout(function () {
-            if (hoveredEntry === entry) {
-              hoveredEntry = null;
-              updateTocState();
-            }
-          }, 180);
-        });
-        entry.link.addEventListener('focus', function () {
-          if (hoverClearTimer) window.clearTimeout(hoverClearTimer);
-          hoveredEntry = entry;
-          updateTocState();
-        });
-        entry.link.addEventListener('blur', function () {
-          if (hoveredEntry !== entry) return;
-          hoveredEntry = null;
-          updateTocState();
-        });
-      });
       window.addEventListener('scroll', updateTocState, { passive: true });
       window.addEventListener('resize', updateTocState);
     }
