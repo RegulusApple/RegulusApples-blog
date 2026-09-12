@@ -570,16 +570,18 @@ html[data-theme='dark'] .article-body code { color: var(--purple-deep); backgrou
 }
 
 @media (min-width: 1001px) and (max-width: 1180px) {
-  .page-post .site-sidebar,
   .page-post .article-toc-sidebar { width: 220px; }
 }
 
 @media (min-width: 1001px) {
-  .page-post .site-sidebar,
+  .page-post .site-sidebar { align-self: stretch; }
+  .page-post .home-widget-player,
   .page-post .article-toc-sidebar {
     position: sticky;
     top: 122px;
     z-index: 5;
+  }
+  .page-post .article-toc-sidebar {
     max-height: calc(100vh - 150px);
     overflow-y: auto;
   }
