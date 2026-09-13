@@ -1,8 +1,8 @@
 {
-  "name": "halfolds-blog",
+  "name": "regulusapples-blog",
   "version": "1.0.0",
   "private": true,
-  "description": "Halfold's Blog powered by Hexo",
+  "description": "RegulusApple's Blog powered by Hexo",
   "hexo": {
     "version": "8.1.2"
   },

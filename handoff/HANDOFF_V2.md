@@ -1,4 +1,4 @@
-# HANDOFF_V2 — Halfold's Blog 交付说明
+# HANDOFF_V2 — RegulusApple's Blog 交付说明
 
 > 生成日期：2026-08-29
 > 用途：补充 `HANDOFF_V1.md`，记录本轮界面重构、交互实现、验证发布结果和后续代理的沟通方式。架构、依赖、部署边界等基础信息以 `HANDOFF_V1.md` 为准，本文件不重复复制。
@@ -81,22 +81,22 @@
 
 | 模块 | 当前用途 | 主要实现位置 |
 | --- | --- | --- |
-| `Now Playing` | 左侧 mini 音乐播放器，显示当前歌曲、来源、播放与切换 | `themes/halfold/layout/_partial/sidebar.ejs`、`themes/halfold/source/js/main.js`、`themes/halfold/source/css/style.css` |
+| `Now Playing` | 左侧 mini 音乐播放器，显示当前歌曲、来源、播放与切换 | `themes/regulusapples-blog/layout/_partial/sidebar.ejs`、`themes/regulusapples-blog/source/js/main.js`、`themes/regulusapples-blog/source/css/style.css` |
 | `Contents` | 文章详情页左侧目录，随滚轮识别当前标题并按需显示二级标题 | `sidebar.ejs`、`main.js`、`style.css` |
 | Archive stats | 非文章页左侧归档统计卡片，按年份和全站汇总文章数据 | `sidebar.ejs`、`style.css` |
-| 分类筛选 | 首页分类按钮对文章列表做真实筛选并更新数量 | `themes/halfold/layout/index.ejs`、`main.js`、`style.css` |
-| 文章底部返回交互 | 返回全部文章的 hover/focus 反馈 | `themes/halfold/layout/post.ejs`、`style.css` |
-| 文章元信息 partial | 抽离列表文章的分类、标签、状态和日期展示，供多个列表布局复用 | `themes/halfold/layout/_partial/post-meta.ejs` |
+| 分类筛选 | 首页分类按钮对文章列表做真实筛选并更新数量 | `themes/regulusapples-blog/layout/index.ejs`、`main.js`、`style.css` |
+| 文章底部返回交互 | 返回全部文章的 hover/focus 反馈 | `themes/regulusapples-blog/layout/post.ejs`、`style.css` |
+| 文章元信息 partial | 抽离列表文章的分类、标签、状态和日期展示，供多个列表布局复用 | `themes/regulusapples-blog/layout/_partial/post-meta.ejs` |
 
 ## 5. 关键文件落点
 
-- `themes/halfold/layout/_partial/sidebar.ejs`：文章页侧栏条件渲染、Now Playing、Contents、Archive stats。
-- `themes/halfold/layout/post.ejs`：文章详情页主结构、正文、评论占位、底部返回和相邻文章。
-- `themes/halfold/layout/index.ejs`：首页分类筛选按钮、文章行和计数状态。
-- `themes/halfold/layout/_partial/post-meta.ejs`：列表文章的分类/标签/日期元信息。
-- `themes/halfold/source/css/style.css`：卡片、导航、深浅模式、hover/focus、目录模糊、sticky 和移动端断点。
-- `themes/halfold/source/js/main.js`：分类筛选、主题交互、音乐、文章目录视口状态、灯箱和搜索等行为。
-- `themes/halfold/layout/layout.ejs`：CSS/JS 资源版本号当前分别为 `style.css?v=23`、`main.js?v=12`；改动对应资源后要同步递增。
+- `themes/regulusapples-blog/layout/_partial/sidebar.ejs`：文章页侧栏条件渲染、Now Playing、Contents、Archive stats。
+- `themes/regulusapples-blog/layout/post.ejs`：文章详情页主结构、正文、评论占位、底部返回和相邻文章。
+- `themes/regulusapples-blog/layout/index.ejs`：首页分类筛选按钮、文章行和计数状态。
+- `themes/regulusapples-blog/layout/_partial/post-meta.ejs`：列表文章的分类/标签/日期元信息。
+- `themes/regulusapples-blog/source/css/style.css`：卡片、导航、深浅模式、hover/focus、目录模糊、sticky 和移动端断点。
+- `themes/regulusapples-blog/source/js/main.js`：分类筛选、主题交互、音乐、文章目录视口状态、灯箱和搜索等行为。
+- `themes/regulusapples-blog/layout/layout.ejs`：CSS/JS 资源版本号当前分别为 `style.css?v=23`、`main.js?v=12`；改动对应资源后要同步递增。
 - `handoff/HANDOFF_V1.md`：架构、文章写作、部署和保护规则的完整基线。
 
 ## 6. 已执行的验证
@@ -105,7 +105,7 @@
 
 ```powershell
 npm run build
-node --check themes/halfold/source/js/main.js
+node --check themes/regulusapples-blog/source/js/main.js
 git diff --check
 ```
 
@@ -168,16 +168,16 @@ git diff --check
 
 涉及文件：
 
-- `themes/halfold/layout/_partial/sidebar.ejs`：组合正式文章与预览草稿，按月份输出十二个月数据及月度条目。
-- `themes/halfold/source/js/main.js`：月份点击、月度时间轴渲染、鼠标/焦点状态和离开后的复位。
-- `themes/halfold/source/css/style.css`：默认虚化、悬停清晰、月份状态、内部时间轴和响应式表现。
-- `themes/halfold/layout/layout.ejs`：当前资源版本号为 `style.css?v=25`、`main.js?v=16`，用于避免浏览器沿用旧资源。
+- `themes/regulusapples-blog/layout/_partial/sidebar.ejs`：组合正式文章与预览草稿，按月份输出十二个月数据及月度条目。
+- `themes/regulusapples-blog/source/js/main.js`：月份点击、月度时间轴渲染、鼠标/焦点状态和离开后的复位。
+- `themes/regulusapples-blog/source/css/style.css`：默认虚化、悬停清晰、月份状态、内部时间轴和响应式表现。
+- `themes/regulusapples-blog/layout/layout.ejs`：当前资源版本号为 `style.css?v=25`、`main.js?v=16`，用于避免浏览器沿用旧资源。
 
 ### 10.3 周小结内容入口
 
 - 周小结模板：`scaffolds/weekly-post.md`。
-- 独立列表页：`source/weekly/index.md` + `themes/halfold/layout/weekly.ejs`，页面标题已更正为“周小结”。
-- 周小结详情布局：`themes/halfold/layout/weekly-post.ejs`。
+- 独立列表页：`source/weekly/index.md` + `themes/regulusapples-blog/layout/weekly.ejs`，页面标题已更正为“周小结”。
+- 周小结详情布局：`themes/regulusapples-blog/layout/weekly-post.ejs`。
 - 新建命令已加入 `package.json`：`npm run new:weekly -- "标题"`。
 - `source/_drafts/2026-08-30-weekly-template.md` 只是本地预览样例；它会在 `hexo server --draft` 中出现，但不会进入普通正式构建。
 - 正式要发布或参与正式搜索的周小结，应放在 `source/_posts/`，并保留 `weekly: true`、`layout: weekly-post` 和周小结 permalink；它会进入 `/weekly/`、月份模块与搜索，但不会混入普通博客首页、普通归档统计和普通文章列表。
@@ -188,7 +188,7 @@ git diff --check
 
 ```powershell
 npm run build
-node --check themes/halfold/source/js/main.js
+node --check themes/regulusapples-blog/source/js/main.js
 git diff --check
 ```
 

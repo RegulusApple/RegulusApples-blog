@@ -1,4 +1,4 @@
-# HANDOFF V3 — Halfold's Blog 当前交接与需求澄清规则
+# HANDOFF V3 — RegulusApple's Blog 当前交接与需求澄清规则
 
 > 生成日期：2026-08-31
 >
@@ -8,7 +8,7 @@
 
 ## 0. 接手结论
 
-当前项目是一个基于 Hexo 8.1.2 和自定义 halfold 主题的博客。当前工作分支是 codex/hexo-migration，当前 HEAD 为 50862cc（Update TI contest review）。最近相关提交顺序为：
+当前项目是一个基于 Hexo 8.1.2 和自定义 regulusapples-blog 主题的博客。当前工作分支是 codex/hexo-migration，当前 HEAD 为 50862cc（Update TI contest review）。最近相关提交顺序为：
 
 ~~~text
 50862cc  Update TI contest review
@@ -30,9 +30,9 @@ df357f6  Publish updated blog
 
 V1/V2 记录过 Contents 的设计方向，但没有完整写清楚现在实际运行的状态机。当前实现位于：
 
-- themes/halfold/layout/_partial/sidebar.ejs：文章页挂载 #article-toc；
-- themes/halfold/source/js/main.js：解析标题、计算滚动状态、处理 hover/focus 和模块状态；
-- themes/halfold/source/css/style.css：字号、虚化、颜色和过渡动画。
+- themes/regulusapples-blog/layout/_partial/sidebar.ejs：文章页挂载 #article-toc；
+- themes/regulusapples-blog/source/js/main.js：解析标题、计算滚动状态、处理 hover/focus 和模块状态；
+- themes/regulusapples-blog/source/css/style.css：字号、虚化、颜色和过渡动画。
 
 当前最终行为见第 2 节。尤其要记住：鼠标放到整个 Contents 模块上，含义是“当前结构上已经显示的条目取消虚化”，不是“把整棵目录树全部展开”。这条规则是根据用户对前一次误解的明确纠正确定的，后续不能重新按“模块 hover = 全层级展开”实现。
 
@@ -43,10 +43,10 @@ V1/V2 记录过 Contents 的设计方向，但没有完整写清楚现在实际�
 ~~~text
 style.css?v=30
 main.js?v=21
-sw.js: halfold-blog-v14
+sw.js: regulusapples-blog-v14
 ~~~
 
-实际缓存名以源码中的 CACHE_NAME 为准。修改 CSS 或 JS 后，要同步检查 themes/halfold/layout/layout.ejs、source/sw.js 及校验脚本之间是否仍然一致。不要只改文件内容而忘记浏览器缓存版本，否则用户可能继续看到旧行为。
+实际缓存名以源码中的 CACHE_NAME 为准。修改 CSS 或 JS 后，要同步检查 themes/regulusapples-blog/layout/layout.ejs、source/sw.js 及校验脚本之间是否仍然一致。不要只改文件内容而忘记浏览器缓存版本，否则用户可能继续看到旧行为。
 
 ### 1.3 周刊 / Monthly Trace 的真实分流机制需要保留
 
@@ -296,10 +296,10 @@ parentStack
 
 以下是 V3 需要特别记住的当前落点；其余基础目录、主题结构和功能说明以 V1/V2 为准：
 
-- themes/halfold/layout/_partial/sidebar.ejs：文章页 Contents 挂载点；
-- themes/halfold/source/js/main.js：目录层级解析、滚动同步、hover/focus 状态机；
-- themes/halfold/source/css/style.css：目录字号、虚化、清晰状态和过渡动画；
-- themes/halfold/layout/layout.ejs：CSS / JS 资源版本引用；
+- themes/regulusapples-blog/layout/_partial/sidebar.ejs：文章页 Contents 挂载点；
+- themes/regulusapples-blog/source/js/main.js：目录层级解析、滚动同步、hover/focus 状态机；
+- themes/regulusapples-blog/source/css/style.css：目录字号、虚化、清晰状态和过渡动画；
+- themes/regulusapples-blog/layout/layout.ejs：CSS / JS 资源版本引用；
 - source/sw.js：PWA 缓存名与缓存资源版本；
 - scripts/regular-posts.js：常规文章与周刊的生成边界；
 - tools/verify-generated-site.mjs：生成站点结构、引用和 PWA 资源校验；
@@ -320,7 +320,7 @@ parentStack
 npm run clean
 npm run build
 npm run verify
-node --check themes/halfold/source/js/main.js
+node --check themes/regulusapples-blog/source/js/main.js
 git diff --check
 ~~~
 

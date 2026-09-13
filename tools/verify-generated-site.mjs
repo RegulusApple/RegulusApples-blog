@@ -97,7 +97,7 @@ for (const marker of ['giscus.app/client.js', 'data-music-player', 'searchOverla
 assert(!homepage.includes('googletagmanager.com/gtag/js') && !homepage.includes('data-website-id='), 'Analytics scripts must stay disabled until the user supplies an analytics identifier.');
 assert(manifest.display === 'standalone' && manifest.start_url === '/', 'Generated PWA manifest is invalid.');
 
-const layoutSource = await readProject('themes/halfold/layout/layout.ejs');
+const layoutSource = await readProject('themes/regulusapples-blog/layout/layout.ejs');
 const serviceWorkerSource = await readProject('source/sw.js');
 const styleVersion = layoutSource.match(/style\.css[^\n]*\?v=(\d+)/)?.[1];
 const scriptVersion = layoutSource.match(/main\.js[^\n]*\?v=(\d+)/)?.[1];

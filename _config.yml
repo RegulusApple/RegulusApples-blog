@@ -1,4 +1,4 @@
-# Halfold's Blog — Hexo site configuration
+# RegulusApple's Blog — Hexo site configuration
 title: RegulusApple's Blog
 subtitle: Record，Remember，Reinvent，Revolutionize
 description: 一个记录学习、项目、读书与生活的个人角落。
@@ -11,7 +11,7 @@ permalink: notes/:title/
 permalink_defaults:
   lang: zh-CN
 
-theme: halfold
+theme: regulusapples-blog
 new_post_name: :year-:month-:day-:title.md
 default_layout: post
 post_asset_folder: false

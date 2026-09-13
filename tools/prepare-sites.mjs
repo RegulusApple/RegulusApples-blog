@@ -38,7 +38,7 @@ export default {
 `);
 
 await writeFile(join(server, 'wrangler.json'), JSON.stringify({
-  name: 'halfolds-blog',
+  name: 'regulusapples-blog',
   main: 'index.js',
   compatibility_date: '2026-05-15',
   compatibility_flags: ['nodejs_compat'],

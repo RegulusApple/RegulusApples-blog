@@ -1,13 +1,13 @@
-# HANDOFF_V1 — Halfold's Blog 交付说明
+# HANDOFF_V1 — RegulusApple's Blog 交付说明
 
 > 生成日期：2026-08-29
-> 用途：让新的 Codex 任务或维护者无需重读完整对话，即可继续维护、写作、测试和发布 Halfold's Blog。
+> 用途：让新的 Codex 任务或维护者无需重读完整对话，即可继续维护、写作、测试和发布 RegulusApple's Blog。
 > 项目根目录在本文统一写作 `<BLOG_ROOT>`，实际位置请由接手者在当前工作区确认，避免在文档中固化个人目录信息。
 
 ## 0. 接手结论
 
 - 当前博客**已经是 Hexo 架构**，不是普通的单页原型。
-- Hexo 版本为 `8.1.2`，主题是本项目自行制作的 `halfold`，**不是** `hexo-theme-solitude`。
+- Hexo 版本为 `8.1.2`，主题是本项目自行制作的 `regulusapples-blog`，**不是** `hexo-theme-solitude`。
 - Solitude、SoCoco 和 Eurkon 仅作为功能、内容组织、配置方式和魔改方法的参考；不要直接把 Solitude 配置复制进当前主题。
 - 当前线上地址：<https://halfolds-blog.regulusapplex.chatgpt.site/>
 - 当前分支：`codex/hexo-migration`。接手前先执行 `git status --short` 和 `git log -5 --oneline`，以仓库实时结果为准。
@@ -23,7 +23,7 @@ Markdown 文章 / 页面
         ↓
 Hexo 8 读取根配置与主题配置
         ↓
-自定义 halfold 主题（EJS + CSS + 原生 JavaScript）
+自定义 regulusapples-blog 主题（EJS + CSS + 原生 JavaScript）
         ↓
 public/ 静态站点
         ↓
@@ -52,22 +52,22 @@ Codex Sites 托管
 | `<BLOG_ROOT>/source/_posts/` | 正式文章 Markdown | 写文章、改文章时 |
 | `<BLOG_ROOT>/source/<page>/index.md` | 关于、搜索、统计、读书架等独立页面入口 | 增改页面标题、路由、Front Matter 时 |
 | `<BLOG_ROOT>/source/images/` | 会原样发布到 `/images/` 的站点图片 | 增加头像、封面、相册图等素材时 |
-| `<BLOG_ROOT>/themes/halfold/_config.yml` | 自定义主题的数据配置 | 改导航、个人信息、Hero、分类按钮、相册、音乐、读书、评论、统计时 |
-| `<BLOG_ROOT>/themes/halfold/layout/` | EJS 页面模板 | 改页面结构、增加模块时 |
-| `<BLOG_ROOT>/themes/halfold/source/css/style.css` | 全站浅色/深色、响应式和组件视觉 | 改配色、尺寸、圆角、比例时 |
-| `<BLOG_ROOT>/themes/halfold/source/js/main.js` | 搜索、主题切换、目录、灯箱、音乐、评论、PWA 等交互 | 改前端行为时 |
+| `<BLOG_ROOT>/themes/regulusapples-blog/_config.yml` | 自定义主题的数据配置 | 改导航、个人信息、Hero、分类按钮、相册、音乐、读书、评论、统计时 |
+| `<BLOG_ROOT>/themes/regulusapples-blog/layout/` | EJS 页面模板 | 改页面结构、增加模块时 |
+| `<BLOG_ROOT>/themes/regulusapples-blog/source/css/style.css` | 全站浅色/深色、响应式和组件视觉 | 改配色、尺寸、圆角、比例时 |
+| `<BLOG_ROOT>/themes/regulusapples-blog/source/js/main.js` | 搜索、主题切换、目录、灯箱、音乐、评论、PWA 等交互 | 改前端行为时 |
 | `<BLOG_ROOT>/tools/prepare-sites.mjs` | 把 Hexo 静态结果整理为 Sites 可部署产物 | 改托管适配时 |
 | `<BLOG_ROOT>/tools/verify-generated-site.mjs` | 生成站点的回归检查 | 页面结构或固定测试文章变化时 |
 | `<BLOG_ROOT>/.openai/hosting.json` | 当前 Sites 项目的绑定信息 | 处理 Sites 托管时；不要公开其中内部标识 |
 
 ### 1.3 主题模板对应关系
 
-- 全局外壳、顶部导航、侧栏、搜索弹层、主题切换、页脚：`themes/halfold/layout/layout.ejs`
-- 首页 Hero、文章列表、分类筛选、记忆区：`themes/halfold/layout/index.ejs`
-- 文章正文、目录、字数/阅读时间、相关文章、评论、上一篇/下一篇：`themes/halfold/layout/post.ejs`
+- 全局外壳、顶部导航、侧栏、搜索弹层、主题切换、页脚：`themes/regulusapples-blog/layout/layout.ejs`
+- 首页 Hero、文章列表、分类筛选、记忆区：`themes/regulusapples-blog/layout/index.ejs`
+- 文章正文、目录、字数/阅读时间、相关文章、评论、上一篇/下一篇：`themes/regulusapples-blog/layout/post.ejs`
 - 归档、分类、标签：`archive.ejs`、`category.ejs`、`tag.ejs`
 - 搜索、统计、相册、音乐、读书架、留言板：对应的同名 EJS 模板
-- 侧边栏和分页：`themes/halfold/layout/_partial/`
+- 侧边栏和分页：`themes/regulusapples-blog/layout/_partial/`
 
 修改结构前先定位对应模板，不要把页面级结构全部堆进 `layout.ejs`。
 
@@ -105,14 +105,14 @@ Codex Sites 托管
 ### 3.1 改文字、身份和站点信息
 
 - 博客名称、副标题、描述、作者、语言、站点 URL：修改 `<BLOG_ROOT>/_config.yml`。
-- 昵称、角色描述、头像、个人简介、首页 Hero 文案与图片：修改 `<BLOG_ROOT>/themes/halfold/_config.yml`。
+- 昵称、角色描述、头像、个人简介、首页 Hero 文案与图片：修改 `<BLOG_ROOT>/themes/regulusapples-blog/_config.yml`。
 - 图片文件放入 `<BLOG_ROOT>/source/images/`，配置中使用 `/images/文件名`。
 
 ### 3.2 改导航和页面入口
 
-1. 在 `themes/halfold/_config.yml` 的菜单配置中增删入口。
+1. 在 `themes/regulusapples-blog/_config.yml` 的菜单配置中增删入口。
 2. 如果是新独立页面，在 `source/页面名/index.md` 创建 Front Matter。
-3. 在 `themes/halfold/layout/` 增加或复用对应布局。
+3. 在 `themes/regulusapples-blog/layout/` 增加或复用对应布局。
 4. 同时检查桌面顶部导航、移动端导航和侧栏，不要只改一个入口。
 
 现有特殊页面入口可直接参考：
@@ -126,7 +126,7 @@ Codex Sites 托管
 
 ### 3.3 改配色、组件比例和响应式
 
-主要修改 `themes/halfold/source/css/style.css`。当前风格要求应继续遵守：
+主要修改 `themes/regulusapples-blog/source/css/style.css`。当前风格要求应继续遵守：
 
 - 浅色模式尽可能白、轻、低噪声，人物图底色与模块自然过渡。
 - 深色模式使用柔和紫黑，避免纯黑和高饱和荧光色大面积铺设。
@@ -139,7 +139,7 @@ Codex Sites 托管
 
 ### 3.4 改功能与交互
 
-- 搜索、主题切换、目录、灯箱、音乐和评论加载均集中在 `themes/halfold/source/js/main.js`。
+- 搜索、主题切换、目录、灯箱、音乐和评论加载均集中在 `themes/regulusapples-blog/source/js/main.js`。
 - 新增交互时确保重复初始化不会累积事件监听器。
 - 搜索弹层要同时支持鼠标、键盘、关闭按钮和 `Escape`。
 - 深浅主题下组件应保持同一布局坐标；主题变化只改变视觉变量，不应改变结构尺寸。
@@ -182,7 +182,7 @@ comment: true
 注意：
 
 - 新文章使用 Hexo 标准字段 `categories:`（复数）；已有文章中的单数字段可暂时保留，迁移时再统一。
-- 分类用于内容归档；首页显示哪些分类按钮，则由 `themes/halfold/_config.yml` 的分类列表控制。新增分类时通常两处都要检查。
+- 分类用于内容归档；首页显示哪些分类按钮，则由 `themes/regulusapples-blog/_config.yml` 的分类列表控制。新增分类时通常两处都要检查。
 - `cover` 留空时不要写不存在的图片路径。
 - `updated` 不会自动代表真实编辑时间，完成大改后手工更新。
 - 当前固定链接规则是 `/notes/:title/`，文件名和标题变化可能改变链接，已发布文章不要随意重命名 slug。
@@ -298,7 +298,7 @@ git push
 - 浏览器扩展应依赖稳定的公开接口和生命周期，而不是耦合内部变量。
 - 主题升级时应保留用户配置，避免直接覆盖定制内容。
 
-不应照抄：`theme: solitude`、Solitude 的模板路径、`_config.solitude.yml` 字段或其前端私有实现。当前项目是 `halfold` 主题，模板语言和配置结构均不同。
+不应照抄：`theme: solitude`、Solitude 的模板路径、`_config.solitude.yml` 字段或其前端私有实现。当前项目是 `regulusapples-blog` 主题，模板语言和配置结构均不同。
 
 ### 6.3 Solitude 官方文档
 
@@ -312,7 +312,7 @@ git push
 - [留言板](https://solitude.js.org/cn/docs/features/message)：理解留言页依赖真实评论服务，页面本身不是留言后端。
 - [Browser API](https://solitude.js.org/docs/configuration/browser-api)：参考统一公开 API、主题切换事件和页面切换生命周期。
 
-对 Halfold Blog 的正确用法是学习“配置模型和功能设计”，再在 `themes/halfold/` 中实现等价能力；不是把 Solitude 文档里的 YAML 原样粘贴进当前配置。
+对 RegulusApple Blog 的正确用法是学习“配置模型和功能设计”，再在 `themes/regulusapples-blog/` 中实现等价能力；不是把 Solitude 文档里的 YAML 原样粘贴进当前配置。
 
 ### 6.4 Eurkon：Hexo 博客文章统计图
 
@@ -352,7 +352,7 @@ git push
 
 ## 8. 易踩坑与保护规则
 
-- `halfold` 是定制主题。更新 Hexo 或参考 Solitude 时，不要用主题包覆盖 `themes/halfold/`。
+- `regulusapples-blog` 是定制主题。更新 Hexo 或参考 Solitude 时，不要用主题包覆盖 `themes/regulusapples-blog/`。
 - 首页分类按钮来自主题配置，文章分类来自 Front Matter，两者不是同一数据源。
 - 相册、音乐、读书架主要从主题配置取数据，对应 Markdown 页面本身只是路由入口。
 - 搜索依赖生成的 `search.json`；改搜索字段后要重新构建。

@@ -15,7 +15,7 @@
     return stripHtml(value).toLocaleLowerCase();
   }
 
-  var readPostsStorageKey = 'halfold-read-posts';
+  var readPostsStorageKey = 'regulusapples-blog-read-posts';
   var parseReadPosts = function (value) {
     try {
       var parsed = JSON.parse(value || '[]');
@@ -327,12 +327,12 @@
       themeToggle.querySelector('b').textContent = isDark ? '深色' : '浅色';
       var themeColor = document.querySelector('meta[name="theme-color"]');
       if (themeColor) themeColor.setAttribute('content', isDark ? '#211b35' : '#fbfaf4');
-      document.dispatchEvent(new CustomEvent('halfold:theme-change', { detail: { theme: isDark ? 'dark' : 'light' } }));
+      document.dispatchEvent(new CustomEvent('regulusapples-blog:theme-change', { detail: { theme: isDark ? 'dark' : 'light' } }));
     };
     setTheme(document.documentElement.dataset.theme || 'light');
     themeToggle.addEventListener('click', function () {
       var nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-      try { localStorage.setItem('halfold-theme', nextTheme); } catch (error) {}
+      try { localStorage.setItem('regulusapples-blog-theme', nextTheme); } catch (error) {}
       setTheme(nextTheme);
     });
   }
@@ -625,7 +625,7 @@
       giscusScript.setAttribute('data-lang', comments.dataset.lang || 'zh-CN');
       commentMount.appendChild(giscusScript);
     }
-    document.addEventListener('halfold:theme-change', function (event) {
+    document.addEventListener('regulusapples-blog:theme-change', function (event) {
       var frame = document.querySelector('iframe.giscus-frame');
       if (frame && frame.contentWindow) {
         frame.contentWindow.postMessage({ giscus: { setConfig: { theme: event.detail.theme === 'dark' ? 'dark_dimmed' : 'light' } } }, 'https://giscus.app');
