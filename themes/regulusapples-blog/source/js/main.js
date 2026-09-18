@@ -315,32 +315,38 @@
     });
   }
 
-  var themeToggle = document.getElementById('theme-toggle');
-  if (themeToggle) {
+  var themeToggles = Array.from(document.querySelectorAll('[data-theme-toggle]'));
+  if (themeToggles.length) {
     var setTheme = function (theme) {
       var isDark = theme === 'dark';
       document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
-      themeToggle.setAttribute('aria-pressed', String(isDark));
-      themeToggle.setAttribute('aria-label', isDark ? '切换到浅色模式' : '切换到深色模式');
-      themeToggle.title = isDark ? '切换到浅色模式' : '切换到深色模式';
-      themeToggle.querySelector('span').textContent = isDark ? '☾' : '☼';
-      themeToggle.querySelector('b').textContent = isDark ? '深色' : '浅色';
+      themeToggles.forEach(function (themeToggle) {
+        themeToggle.setAttribute('aria-pressed', String(isDark));
+        themeToggle.setAttribute('aria-label', isDark ? '切换到浅色模式' : '切换到深色模式');
+        themeToggle.title = isDark ? '切换到浅色模式' : '切换到深色模式';
+        var icon = themeToggle.querySelector('span');
+        var label = themeToggle.querySelector('b');
+        if (icon) icon.textContent = isDark ? '☾' : '☼';
+        if (label) label.textContent = isDark ? '深色' : '浅色';
+      });
       var themeColor = document.querySelector('meta[name="theme-color"]');
       if (themeColor) themeColor.setAttribute('content', isDark ? '#211b35' : '#fbfaf4');
       document.dispatchEvent(new CustomEvent('regulusapples-blog:theme-change', { detail: { theme: isDark ? 'dark' : 'light' } }));
     };
     setTheme(document.documentElement.dataset.theme || 'light');
-    themeToggle.addEventListener('click', function () {
-      var nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-      try { localStorage.setItem('regulusapples-blog-theme', nextTheme); } catch (error) {}
-      setTheme(nextTheme);
+    themeToggles.forEach(function (themeToggle) {
+      themeToggle.addEventListener('click', function () {
+        var nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        try { localStorage.setItem('regulusapples-blog-theme', nextTheme); } catch (error) {}
+        setTheme(nextTheme);
+      });
     });
   }
 
-  var searchTrigger = document.getElementById('search-trigger');
+  var searchTriggers = Array.from(document.querySelectorAll('[data-search-trigger]'));
   var searchOverlay = document.getElementById('search-overlay');
   var globalSearchInput = document.getElementById('global-search-input');
-  if (searchTrigger && searchOverlay && globalSearchInput) {
+  if (searchTriggers.length && searchOverlay && globalSearchInput) {
     var lastFocusedElement = null;
     var closeSearch = function () {
       searchOverlay.hidden = true;
@@ -348,12 +354,16 @@
       if (lastFocusedElement) lastFocusedElement.focus();
     };
     var openSearch = function () {
-      lastFocusedElement = document.activeElement;
+      var wasMobileDrawerOpen = document.body.classList.contains('mobile-drawer-open');
+      if (wasMobileDrawerOpen && typeof closeMobileDrawer === 'function') closeMobileDrawer(false);
+      lastFocusedElement = wasMobileDrawerOpen ? document.getElementById('mobile-menu-trigger') : document.activeElement;
       searchOverlay.hidden = false;
       document.body.classList.add('search-open');
       requestAnimationFrame(function () { globalSearchInput.focus(); });
     };
-    searchTrigger.addEventListener('click', openSearch);
+    searchTriggers.forEach(function (searchTrigger) {
+      searchTrigger.addEventListener('click', openSearch);
+    });
     searchOverlay.querySelectorAll('[data-search-close]').forEach(function (closeButton) {
       closeButton.addEventListener('click', closeSearch);
     });
@@ -362,14 +372,111 @@
     });
   }
 
+  var mobileDrawer = document.getElementById('mobile-drawer');
+  var mobileMenuTrigger = document.getElementById('mobile-menu-trigger');
+  if (mobileDrawer && mobileMenuTrigger) {
+    var mobileDrawerPanel = mobileDrawer.querySelector('.mobile-drawer-panel');
+    var mobileDrawerTitle = mobileDrawer.querySelector('#mobile-drawer-title');
+    var mobileDrawerSwitch = mobileDrawer.querySelector('[data-mobile-drawer-switch]');
+    var mobileDrawerViews = Array.from(mobileDrawer.querySelectorAll('[data-mobile-drawer-view]'));
+    var mobileDrawerLastFocused = null;
+    var mobileDrawerFocusables = function () {
+      return Array.from(mobileDrawerPanel.querySelectorAll('a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])')).filter(function (element) {
+        return element.offsetParent !== null;
+      });
+    };
+    var setMobileDrawerMode = function (mode) {
+      var isToc = mode === 'toc';
+      mobileDrawerViews.forEach(function (view) {
+        view.hidden = view.dataset.mobileDrawerView !== mode;
+      });
+      if (mobileDrawerTitle) mobileDrawerTitle.textContent = isToc ? '文章目录' : '站点导航';
+      if (mobileDrawerSwitch) {
+        mobileDrawerSwitch.textContent = isToc ? '← 功能页' : '目录 →';
+        mobileDrawerSwitch.setAttribute('aria-label', isToc ? '返回功能页' : '打开文章目录');
+      }
+      mobileDrawer.dataset.mode = mode;
+    };
+    var closeMobileDrawer = function (restoreFocus) {
+      mobileDrawer.hidden = true;
+      document.body.classList.remove('mobile-drawer-open');
+      mobileMenuTrigger.setAttribute('aria-expanded', 'false');
+      if (restoreFocus !== false && mobileDrawerLastFocused && typeof mobileDrawerLastFocused.focus === 'function') mobileDrawerLastFocused.focus();
+      mobileDrawerLastFocused = null;
+    };
+    var openMobileDrawer = function (mode, source) {
+      mobileDrawerLastFocused = source || document.activeElement;
+      setMobileDrawerMode(mode || 'navigation');
+      mobileDrawer.hidden = false;
+      document.body.classList.add('mobile-drawer-open');
+      mobileMenuTrigger.setAttribute('aria-expanded', 'true');
+      requestAnimationFrame(function () {
+        var focusables = mobileDrawerFocusables();
+        if (focusables.length) focusables[0].focus();
+        else if (mobileDrawerPanel) mobileDrawerPanel.focus();
+      });
+    };
+    mobileMenuTrigger.addEventListener('click', function () {
+      if (mobileDrawer.hidden) openMobileDrawer('navigation', mobileMenuTrigger);
+      else closeMobileDrawer();
+    });
+    document.querySelectorAll('[data-mobile-drawer-open]').forEach(function (trigger) {
+      trigger.addEventListener('click', function () {
+        openMobileDrawer(trigger.dataset.mobileDrawerOpen || 'navigation', trigger);
+      });
+    });
+    mobileDrawer.querySelectorAll('[data-mobile-drawer-close]').forEach(function (trigger) {
+      trigger.addEventListener('click', function () { closeMobileDrawer(); });
+    });
+    if (mobileDrawerSwitch) {
+      mobileDrawerSwitch.addEventListener('click', function () {
+        setMobileDrawerMode(mobileDrawer.dataset.mode === 'toc' ? 'navigation' : 'toc');
+      });
+    }
+    mobileDrawer.querySelectorAll('.mobile-nav-link').forEach(function (link) {
+      link.addEventListener('click', function () { closeMobileDrawer(false); });
+    });
+    document.addEventListener('keydown', function (event) {
+      if (mobileDrawer.hidden) return;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeMobileDrawer();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      var focusables = mobileDrawerFocusables();
+      if (!focusables.length) return;
+      var first = focusables[0];
+      var last = focusables[focusables.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+    var mobileNavLinks = Array.from(mobileDrawer.querySelectorAll('.mobile-nav-link[data-nav-path]'));
+    var mobilePath = String(window.location.pathname || '/').split('?')[0].replace(/\/+$/, '') || '/';
+    mobileNavLinks.forEach(function (link) {
+      var targetPath = String(link.dataset.navPath || '/').replace(/\/+$/, '') || '/';
+      var isActive = targetPath === '/' ? mobilePath === '/' : mobilePath === targetPath || mobilePath.indexOf(targetPath + '/') === 0;
+      link.classList.toggle('is-active', isActive);
+      if (isActive) link.setAttribute('aria-current', 'page');
+    });
+  }
+
   var articleBody = document.querySelector('.article-body');
-  var toc = document.getElementById('article-toc');
+  var desktopToc = document.getElementById('article-toc');
+  var mobileToc = document.getElementById('mobile-article-toc');
+  var tocNodes = [desktopToc, mobileToc].filter(function (node) { return Boolean(node); });
+  var toc = desktopToc || mobileToc || null;
   var contentsWidget = toc ? toc.closest('.home-widget-contents') : null;
 
-  if (articleBody && toc) {
+  if (articleBody && tocNodes.length) {
     var headings = articleBody.querySelectorAll('h2, h3, h4, h5, h6');
     if (headings.length) {
-      toc.innerHTML = '';
+      tocNodes.forEach(function (tocNode) { tocNode.innerHTML = ''; });
       var tocEntries = [];
       var parentStack = [];
       var hoveredEntry = null;
@@ -382,12 +489,16 @@
         var level = Number(heading.tagName.substring(1));
         while (parentStack.length && parentStack[parentStack.length - 1].level >= level) parentStack.pop();
         var parent = parentStack.length ? parentStack[parentStack.length - 1] : null;
-        var entry = { heading: heading, link: link, level: level, parent: parent, children: [] };
+        var entry = { heading: heading, links: [], level: level, parent: parent, children: [] };
         if (parent) parent.children.push(entry);
         parentStack.push(entry);
-        link.className = 'toc-entry toc-level-' + level + (parent ? ' toc-subitem' : ' toc-root');
-        link.textContent = heading.textContent;
-        toc.appendChild(link);
+        tocNodes.forEach(function (tocNode) {
+          var nodeLink = link.cloneNode(true);
+          nodeLink.className = 'toc-entry toc-level-' + level + (parent ? ' toc-subitem' : ' toc-root');
+          nodeLink.textContent = heading.textContent;
+          tocNode.appendChild(nodeLink);
+          entry.links.push(nodeLink);
+        });
         tocEntries.push(entry);
       });
 
@@ -414,11 +525,13 @@
           var isRevealed = moduleHovered || !entry.parent || activePath.indexOf(entry.parent) !== -1;
           var isVisible = visibleEntries.indexOf(entry) !== -1;
           var isModuleClear = moduleHovered && isRevealed;
-          entry.link.classList.toggle('is-revealed', isRevealed);
-          entry.link.classList.toggle('is-visible', isVisible);
-          entry.link.classList.toggle('is-module-clear', isModuleClear);
-          entry.link.classList.toggle('is-current', entry === activeEntry);
-          entry.link.classList.toggle('is-hovered', entry === hoveredEntry);
+          entry.links.forEach(function (entryLink) {
+            entryLink.classList.toggle('is-revealed', isRevealed);
+            entryLink.classList.toggle('is-visible', isVisible);
+            entryLink.classList.toggle('is-module-clear', isModuleClear);
+            entryLink.classList.toggle('is-current', entry === activeEntry);
+            entryLink.classList.toggle('is-hovered', entry === hoveredEntry);
+          });
         });
         if (contentsWidget) contentsWidget.classList.toggle('is-expanded', moduleHovered);
       };
@@ -436,23 +549,30 @@
         });
       }
       tocEntries.forEach(function (entry) {
-        entry.link.addEventListener('mouseenter', function () {
-          hoveredEntry = entry;
-          updateTocState();
-        });
-        entry.link.addEventListener('mouseleave', function () {
-          if (hoveredEntry !== entry) return;
-          hoveredEntry = null;
-          updateTocState();
-        });
-        entry.link.addEventListener('focus', function () {
-          hoveredEntry = entry;
-          updateTocState();
-        });
-        entry.link.addEventListener('blur', function () {
-          if (hoveredEntry !== entry) return;
-          hoveredEntry = null;
-          updateTocState();
+        entry.links.forEach(function (entryLink) {
+          if (entryLink.closest('#mobile-article-toc')) {
+            entryLink.addEventListener('click', function () {
+              if (typeof closeMobileDrawer === 'function') closeMobileDrawer(false);
+            });
+          }
+          entryLink.addEventListener('mouseenter', function () {
+            hoveredEntry = entry;
+            updateTocState();
+          });
+          entryLink.addEventListener('mouseleave', function () {
+            if (hoveredEntry !== entry) return;
+            hoveredEntry = null;
+            updateTocState();
+          });
+          entryLink.addEventListener('focus', function () {
+            hoveredEntry = entry;
+            updateTocState();
+          });
+          entryLink.addEventListener('blur', function () {
+            if (hoveredEntry !== entry) return;
+            hoveredEntry = null;
+            updateTocState();
+          });
         });
       });
       window.addEventListener('scroll', updateTocState, { passive: true });

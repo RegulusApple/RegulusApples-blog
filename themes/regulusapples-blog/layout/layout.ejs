@@ -10,7 +10,7 @@
     <meta name="description" content="<%= page.description || config.description %>">
     <link rel="icon" href="<%- url_for('/favicon.svg') %>">
     <link rel="manifest" href="<%- url_for('/manifest.webmanifest') %>">
-    <link rel="stylesheet" href="<%- url_for('/css/style.css') %>?v=30">
+    <link rel="stylesheet" href="<%- url_for('/css/style.css') %>?v=34">
     <link rel="stylesheet" href="<%- url_for('/css/katex.min.css') %>">
     <script>
       (function () {
@@ -36,8 +36,9 @@
             <% }); %>
           </nav>
           <div class="global-actions">
-            <button class="search-trigger" id="search-trigger" type="button" aria-label="打开搜索" aria-haspopup="dialog" aria-controls="search-overlay"><span aria-hidden="true"></span></button>
-            <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换颜色模式" aria-pressed="false"><span aria-hidden="true">☼</span><b>浅色</b></button>
+            <button class="search-trigger" id="search-trigger" data-search-trigger type="button" aria-label="打开搜索" aria-haspopup="dialog" aria-controls="search-overlay"><span aria-hidden="true"></span></button>
+            <button class="theme-toggle" id="theme-toggle" data-theme-toggle type="button" aria-label="切换颜色模式" aria-pressed="false"><span aria-hidden="true">☼</span><b>浅色</b></button>
+            <button class="mobile-menu-trigger" id="mobile-menu-trigger" type="button" aria-label="打开站点导航" aria-controls="mobile-drawer" aria-expanded="false"><span aria-hidden="true"></span></button>
           </div>
         </div>
         <nav class="section-nav" aria-label="当前分组导航">
@@ -53,6 +54,53 @@
         </nav>
       </header>
 
+      <div class="mobile-drawer" id="mobile-drawer" hidden>
+        <div class="mobile-drawer-backdrop" data-mobile-drawer-close></div>
+        <aside class="mobile-drawer-panel" role="dialog" aria-modal="true" aria-labelledby="mobile-drawer-title" tabindex="-1">
+          <div class="mobile-drawer-brand">
+            <div class="mobile-drawer-profile">
+              <img src="<%- url_for(theme.profile.avatar) %>" alt="">
+              <div><strong><%= theme.profile.name %></strong><span><%= theme.profile.role %></span></div>
+            </div>
+            <button class="mobile-drawer-close" type="button" data-mobile-drawer-close aria-label="关闭侧滑菜单">×</button>
+          </div>
+          <div class="mobile-drawer-heading">
+            <p class="eyebrow">regulusapples-blog / menu</p>
+            <div class="mobile-drawer-heading-row">
+              <h2 id="mobile-drawer-title">站点导航</h2>
+              <% if (page.layout === 'post') { %>
+                <button class="mobile-drawer-switch" type="button" data-mobile-drawer-switch aria-controls="mobile-drawer-navigation mobile-drawer-toc">目录 →</button>
+              <% } %>
+            </div>
+          </div>
+          <div class="mobile-drawer-tools" aria-label="站点工具">
+            <button class="mobile-drawer-tool" type="button" data-search-trigger aria-label="打开搜索"><span aria-hidden="true">⌕</span><b>搜索</b></button>
+            <button class="mobile-drawer-tool" type="button" data-theme-toggle aria-label="切换颜色模式" aria-pressed="false"><span aria-hidden="true">☼</span><b>浅色</b></button>
+          </div>
+
+          <section class="mobile-drawer-view" id="mobile-drawer-navigation" data-mobile-drawer-view="navigation" aria-label="站点导航">
+            <div class="mobile-nav-sections">
+              <% (theme.navigation || []).forEach(function (group, index) { %>
+                <section class="mobile-nav-section">
+                  <h3><span><%= String(index + 1).padStart(2, '0') %></span><%= group.label %></h3>
+                  <nav aria-label="<%= group.label %>">
+                    <% (group.items || []).forEach(function (item) { %>
+                      <a class="mobile-nav-link" href="<%- url_for(item.path) %>" data-nav-path="<%= item.path %>"><span><%= item.label %></span><strong aria-hidden="true">↗</strong></a>
+                    <% }); %>
+                  </nav>
+                </section>
+              <% }); %>
+            </div>
+          </section>
+
+          <% if (page.layout === 'post') { %>
+            <section class="mobile-drawer-view" id="mobile-drawer-toc" data-mobile-drawer-view="toc" aria-label="文章目录" hidden>
+              <nav id="mobile-article-toc" data-article-toc aria-label="文章目录"><span class="toc-empty">正在生成目录……</span></nav>
+            </section>
+          <% } %>
+        </aside>
+      </div>
+
       <main class="page-content">
         <div class="content-grid<%= page.layout === 'post' ? ' post-content-grid' : '' %>">
           <%- partial('_partial/sidebar') %>
@@ -63,7 +111,7 @@
             <aside class="article-toc-sidebar" aria-label="文章目录">
               <section class="home-widget home-widget-contents" aria-labelledby="contents-widget-title">
                 <div class="home-widget-heading"><h2 id="contents-widget-title">Contents</h2></div>
-                <nav id="article-toc" aria-label="文章目录"><span class="toc-empty">滚动查看目录</span></nav>
+                <nav id="article-toc" data-article-toc aria-label="文章目录"><span class="toc-empty">滚动查看目录</span></nav>
               </section>
             </aside>
           <% } %>
@@ -90,7 +138,7 @@
         </section>
       </div>
     </div>
-    <script src="<%- url_for('/js/main.js') %>?v=21" defer></script>
+    <script src="<%- url_for('/js/main.js') %>?v=24" defer></script>
     <% if (analytics.enabled && analytics.provider === 'umami' && analytics.script_url && analytics.website_id) { %>
       <script async src="<%= analytics.script_url %>" data-website-id="<%= analytics.website_id %>"></script>
     <% } else if (analytics.enabled && analytics.provider === 'google-analytics' && analytics.measurement_id) { %>

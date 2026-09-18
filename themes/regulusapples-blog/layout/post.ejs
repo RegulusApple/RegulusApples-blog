@@ -12,6 +12,7 @@
           <% if (page.tags) { page.tags.each(function (tag) { %><a href="<%- url_for('/tags/' + tag.name + '/') %>">#<%= tag.name %></a><% }); } %>
         </div>
         <div class="article-stats"><span>发布于 <%= page.date.format('YYYY-MM-DD') %></span><span>阅读约 <%= readingMinutes %> 分钟</span><span>约 <%= wordCount %> 字</span><% if (page.updated && page.updated.valueOf() !== page.date.valueOf()) { %><span>更新于 <%= page.updated.format('YYYY-MM-DD') %></span><% } %></div>
+        <button class="mobile-toc-trigger" type="button" data-mobile-drawer-open="toc" aria-controls="mobile-drawer"><span>打开文章目录</span><strong aria-hidden="true">↗</strong></button>
       </header>
       <% if (page.cover) { %><img class="article-cover" loading="lazy" decoding="async" src="<%- url_for(page.cover) %>" alt="<%= page.title %> 封面"> <% } %>
       <div class="article-body"><%- page.content %></div>
