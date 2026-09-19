@@ -15,70 +15,6 @@
     return stripHtml(value).toLocaleLowerCase();
   }
 
-  var readPostsStorageKey = 'regulusapples-blog-read-posts';
-  var parseReadPosts = function (value) {
-    try {
-      var parsed = JSON.parse(value || '[]');
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (error) {
-      return [];
-    }
-  };
-  var getCookieReadPosts = function () {
-    try {
-      var cookie = document.cookie.split('; ').find(function (item) {
-        return item.indexOf(readPostsStorageKey + '=') === 0;
-      });
-      return cookie ? parseReadPosts(decodeURIComponent(cookie.slice(readPostsStorageKey.length + 1))) : [];
-    } catch (error) {
-      return [];
-    }
-  };
-  var getReadPosts = function () {
-    try {
-      var stored = parseReadPosts(localStorage.getItem(readPostsStorageKey));
-      if (stored.length) return stored;
-    } catch (error) {
-      // Fall back to a first-party cookie when storage is unavailable.
-    }
-    return getCookieReadPosts();
-  };
-  var saveReadPosts = function (readPosts) {
-    var serialized = JSON.stringify(readPosts);
-    try { localStorage.setItem(readPostsStorageKey, serialized); } catch (error) {}
-    try {
-      document.cookie = readPostsStorageKey + '=' + encodeURIComponent(serialized) + '; max-age=31536000; path=/; samesite=lax';
-    } catch (error) {}
-  };
-  var markPostRead = function (path) {
-    if (!path) return;
-    var readPosts = getReadPosts();
-    if (readPosts.indexOf(path) === -1) {
-      readPosts.push(path);
-      saveReadPosts(readPosts);
-    }
-  };
-  var syncUnreadLabels = function () {
-    var readPosts = getReadPosts();
-    document.querySelectorAll('[data-post-path] [data-unread-label]').forEach(function (label) {
-      var row = label.closest('[data-post-path]');
-      label.hidden = !row || readPosts.indexOf(row.dataset.postPath) !== -1;
-    });
-  };
-  syncUnreadLabels();
-  document.querySelectorAll('[data-post-path]').forEach(function (row) {
-    var links = row.matches('a[href]') ? [row].concat(Array.from(row.querySelectorAll('a[href]'))) : Array.from(row.querySelectorAll('a[href]'));
-    links.forEach(function (link) {
-      link.addEventListener('click', function () {
-        markPostRead(row.dataset.postPath);
-        syncUnreadLabels();
-      });
-    });
-  });
-  var currentArticle = document.querySelector('.article-page[data-post-path]');
-  if (currentArticle) markPostRead(currentArticle.dataset.postPath);
-  window.addEventListener('pageshow', syncUnreadLabels);
-
   var categoryFilters = Array.from(document.querySelectorAll('[data-category-filter]'));
   var homepagePostRows = Array.from(document.querySelectorAll('.category-strip ~ .post-list > .post-row[data-post-category]'));
   if (categoryFilters.length && homepagePostRows.length) {
@@ -103,7 +39,6 @@
       });
       if (categoryCount) categoryCount.textContent = visibleIndex + ' 篇文章';
       if (categoryEmpty) categoryEmpty.hidden = visibleIndex !== 0;
-      syncUnreadLabels();
     };
     categoryFilters.forEach(function (filter) {
       filter.addEventListener('click', function (event) {

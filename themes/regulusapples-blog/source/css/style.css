@@ -277,10 +277,8 @@ html[data-theme='dark'] .monthly-trace-month.is-empty, html[data-theme='dark'] .
 .post-label-category { color: var(--purple); background: rgba(229, 242, 169, .48); font-weight: 800; }
 .post-label-tag { color: var(--purple-soft); background: rgba(117, 97, 168, .1); }
 .post-label-new { color: var(--purple); background: var(--green-soft); font-weight: 800; }
-.post-label-unread { color: var(--muted); background: rgba(245, 244, 235, .9); }
 .post-date { color: var(--muted); background: rgba(229, 242, 169, .25); }
 html[data-theme='dark'] .post-label-category { background: rgba(78, 92, 54, .52); }
-html[data-theme='dark'] .post-label-unread { background: rgba(255, 255, 255, .08); }
 html[data-theme='dark'] .post-date { background: rgba(78, 92, 54, .3); }
 .post-row h3 { margin: 0; color: var(--purple-deep); font: 25px var(--serif); }
 .post-row h3 a:hover, .post-row h3 a:focus-visible { color: var(--purple-soft); }
