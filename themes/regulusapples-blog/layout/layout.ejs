@@ -1,5 +1,6 @@
 <% const pageTitle = page.title ? `${page.title} · ${config.title}` : config.title; %>
 <% const analytics = theme.analytics || {}; %>
+<% const hasMermaid = String(body || '').includes('data-mermaid-block'); %>
 <!doctype html>
 <html lang="<%= config.language || 'zh-CN' %>">
   <head>
@@ -138,6 +139,7 @@
         </section>
       </div>
     </div>
+    <% if (hasMermaid) { %><script src="<%- url_for('/js/vendor/mermaid.min.js') %>?v=1" defer></script><% } %>
     <script src="<%- url_for('/js/main.js') %>?v=25" defer></script>
     <% if (analytics.enabled && analytics.provider === 'umami' && analytics.script_url && analytics.website_id) { %>
       <script async src="<%= analytics.script_url %>" data-website-id="<%= analytics.website_id %>"></script>

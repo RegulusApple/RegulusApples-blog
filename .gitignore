@@ -9,6 +9,7 @@
 /.next/
 /.vinext/
 /dist/
+/themes/regulusapples-blog/source/js/vendor/mermaid.min.js
 next-env.d.ts
 /db.json
 

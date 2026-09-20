@@ -1,0 +1,2 @@
+# Keep project text files normalized to LF across Windows, macOS, and Linux.
+* text=auto eol=lf

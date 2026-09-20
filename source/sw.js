@@ -1,5 +1,5 @@
-const CACHE_NAME = 'regulusapples-blog-v20';
-const APP_SHELL = ['/', '/css/style.css?v=35', '/js/main.js?v=25', '/favicon.svg', '/manifest.webmanifest', '/search.json'];
+const CACHE_NAME = 'regulusapples-blog-v21';
+const APP_SHELL = ['/', '/css/style.css?v=35', '/js/main.js?v=25', '/js/vendor/mermaid.min.js?v=1', '/favicon.svg', '/manifest.webmanifest', '/search.json'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));

@@ -89,6 +89,17 @@ comment: true
 npm run new:weekly -- "本周记录"
 ```
 
+文章中的 Mermaid 图表使用 `mermaid` 代码块，构建后会自动渲染：
+
+````markdown
+```mermaid
+flowchart TD
+  A[开始] --> B{是否完成}
+  B -->|是| C[结束]
+  B -->|否| D[继续处理]
+```
+````
+
 ## 项目结构
 
 ```text

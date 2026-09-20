@@ -365,6 +365,16 @@ html[data-theme='dark'] .weekly-node::before { background: var(--purple-soft); }
 .article-body blockquote { margin: 28px 0; padding: 16px 20px; color: var(--purple); border-left: 4px solid var(--green); background: rgba(229, 242, 169, .32); font: italic 19px/1.6 var(--serif); }
 .article-body pre, .markdown-content pre { overflow-x: auto; padding: 18px; color: #f8f4ff; background: var(--purple-deep); border-radius: 14px; font-size: 13px; line-height: 1.7; }
 .article-body .highlight, .markdown-content .highlight { overflow-x: auto; padding: 18px; color: #f8f4ff; background: var(--purple-deep); border-radius: 14px; font-size: 13px; line-height: 1.7; }
+.mermaid-block { max-width: 100%; margin: 28px 0; padding: 18px; overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; background: rgba(255, 255, 255, .46); }
+.mermaid-diagram { min-width: min-content; color: var(--purple-deep); text-align: center; }
+.mermaid-diagram svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+.mermaid-status { margin: 12px 0 0; color: #a74444; font-size: 12px; line-height: 1.6; }
+.mermaid-source { margin-top: 14px; color: var(--muted); font-size: 12px; }
+.mermaid-source summary { cursor: pointer; color: var(--purple-soft); font-weight: 800; }
+.mermaid-source pre { margin: 10px 0 0; }
+html[data-theme='dark'] .mermaid-block { background: rgba(255, 255, 255, .04); }
+html[data-theme='dark'] .mermaid-diagram { color: #f0eaff; }
+html[data-theme='dark'] .mermaid-status { color: #f0a4a4; }
 html[data-theme='dark'] .article-body pre,
 html[data-theme='dark'] .article-body .highlight,
 html[data-theme='dark'] .markdown-content pre,

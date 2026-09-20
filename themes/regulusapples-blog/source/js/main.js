@@ -15,6 +15,43 @@
     return stripHtml(value).toLocaleLowerCase();
   }
 
+  var mermaidBlocks = Array.from(document.querySelectorAll('[data-mermaid-block]'));
+  if (mermaidBlocks.length && window.mermaid) {
+    var renderMermaidBlocks = function () {
+      var isDark = document.documentElement.dataset.theme === 'dark';
+      window.mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: 'strict',
+        theme: isDark ? 'dark' : 'default'
+      });
+
+      var renders = mermaidBlocks.map(function (block) {
+        var diagram = block.querySelector('[data-mermaid-diagram]');
+        var source = block.querySelector('.mermaid-source code');
+        var status = block.querySelector('[data-mermaid-status]');
+        if (!diagram || !source) return Promise.resolve();
+
+        diagram.innerHTML = '';
+        diagram.textContent = source.textContent || '';
+        diagram.removeAttribute('data-processed');
+        if (status) status.hidden = true;
+
+        return window.mermaid.run({ nodes: [diagram] }).catch(function () {
+          window.setTimeout(function () {
+            if (diagram.querySelector('svg')) return;
+            if (status) status.hidden = false;
+            diagram.setAttribute('aria-label', 'Mermaid 图表渲染失败');
+          }, 120);
+        });
+      });
+
+      return Promise.all(renders);
+    };
+
+    renderMermaidBlocks();
+    document.addEventListener('regulusapples-blog:theme-change', renderMermaidBlocks);
+  }
+
   var categoryFilters = Array.from(document.querySelectorAll('[data-category-filter]'));
   var homepagePostRows = Array.from(document.querySelectorAll('.category-strip ~ .post-list > .post-row[data-post-category]'));
   if (categoryFilters.length && homepagePostRows.length) {

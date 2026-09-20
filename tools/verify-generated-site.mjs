@@ -48,6 +48,7 @@ const weeklyPage = await readPublic('weekly/index.html');
 const categoriesPage = await readPublic('categories/index.html');
 const tagsPage = await readPublic('tags/index.html');
 const generatedScript = await readPublic('js/main.js');
+const mermaidScript = await readPublic('js/vendor/mermaid.min.js');
 const manifest = JSON.parse(await readPublic('manifest.webmanifest'));
 const serviceWorker = await readPublic('sw.js');
 const htmlFiles = (await walk(publicRoot)).filter((file) => file.endsWith(`${sep}index.html`));
@@ -73,6 +74,8 @@ assert(searchPage.includes('data-search-page') && Array.isArray(searchIndex) && 
 for (const marker of ['theme-toggle', 'manifest.webmanifest', 'href="/stats/"', 'href="/reading/"', 'search-trigger', 'search-overlay', 'global-search-input']) {
   assert(homepage.includes(marker), `Generated homepage is missing required feature marker: ${marker}`);
 }
+
+assert(mermaidScript.includes('globalThis'), 'Local Mermaid browser bundle is missing.');
 
 assert(statsPage.includes('year-chart') && messagePage.includes('留言板已经准备好了'), 'Generated statistics or message page is missing.');
 assert(categoriesPage.includes('taxonomy-index-card') && categoriesPage.includes('学习'), 'Generated category index page is missing.');
@@ -107,7 +110,7 @@ assert(styleVersion && styleVersion === cachedStyleVersion, 'Layout and service-
 assert(scriptVersion && scriptVersion === cachedScriptVersion, 'Layout and service-worker JavaScript versions are out of sync.');
 const cacheName = serviceWorkerSource.match(/CACHE_NAME\s*=\s*'([^']+)'/)?.[1];
 assert(cacheName && serviceWorker.includes(cacheName) && serviceWorker.includes(`/css/style.css?v=${styleVersion}`), 'Generated service worker is missing the current cache shell.');
-assert(serviceWorker.includes(`/js/main.js?v=${scriptVersion}`) && serviceWorker.includes('/search.json'), 'Generated service worker is missing current client assets.');
+assert(serviceWorker.includes(`/js/main.js?v=${scriptVersion}`) && serviceWorker.includes('/js/vendor/mermaid.min.js?v=1') && serviceWorker.includes('/search.json'), 'Generated service worker is missing current client assets.');
 assert(serviceWorker.includes("event.request.mode === 'navigate'"), 'Generated service worker is missing the network-first document strategy.');
 
 const generatorSource = await readProject('scripts/regular-posts.js');
