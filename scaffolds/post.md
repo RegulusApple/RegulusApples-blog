@@ -10,7 +10,7 @@ description:
 cover: 
 toc: true
 aside: true
-comment: true
+comments: true
 ---
 
 ## 背景

@@ -52,14 +52,17 @@ hero:
   image_label: WHITESMITH · 01
 
 comments:
-  enabled: false
+  enabled: true
   provider: giscus
-  repo: ''
-  repo_id: ''
-  category: ''
-  category_id: ''
+  repo: RegulusApple/RegulusApples-blog
+  repoId: R_kgDOUXnviQ
+  category: Comments
+  categoryId: DIC_kwDOUXnvic4DGTA-
   mapping: pathname
+  reactionsEnabled: true
+  inputPosition: bottom
   lang: zh-CN
+  fallbackUrl: https://github.com/RegulusApple/RegulusApples-blog/discussions/categories/comments
 
 analytics:
   enabled: false

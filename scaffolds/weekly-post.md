@@ -8,7 +8,7 @@ permalink: weekly/:title/
 description:
 toc: false
 aside: false
-comment: true
+comments: false
 ---
 
 ## 本周完成

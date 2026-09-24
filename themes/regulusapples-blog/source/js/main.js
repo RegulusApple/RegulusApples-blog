@@ -698,8 +698,26 @@
   if (comments && comments.dataset.provider === 'giscus') {
     var requiredGiscusFields = ['repo', 'repoId', 'category', 'categoryId'];
     var giscusReady = requiredGiscusFields.every(function (field) { return comments.dataset[field]; });
-    var commentMount = comments.querySelector('.comment-mount');
-    if (giscusReady && commentMount) {
+    var commentMount = comments.querySelector('[data-comment-mount]');
+    var commentsStatus = comments.querySelector('[data-comments-status]');
+    var commentsFallback = comments.querySelector('[data-comments-fallback]');
+    var giscusLoaded = false;
+    var giscusTheme = function () {
+      return document.documentElement.dataset.theme === 'dark' ? 'dark_dimmed' : 'light';
+    };
+    var showCommentsFallback = function (message) {
+      if (commentsStatus) commentsStatus.textContent = message || '评论暂时无法加载，请稍后再试。';
+      if (commentsFallback) commentsFallback.hidden = false;
+    };
+    var syncGiscusTheme = function (theme) {
+      var frame = comments.querySelector('iframe.giscus-frame');
+      if (frame && frame.contentWindow) {
+        frame.contentWindow.postMessage({ giscus: { setConfig: { theme: theme === 'dark' ? 'dark_dimmed' : 'light' } } }, 'https://giscus.app');
+      }
+    };
+    var loadGiscus = function () {
+      if (!giscusReady || !commentMount || giscusLoaded) return;
+      giscusLoaded = true;
       commentMount.innerHTML = '';
       var giscusScript = document.createElement('script');
       giscusScript.src = 'https://giscus.app/client.js';
@@ -710,18 +728,36 @@
       giscusScript.setAttribute('data-category', comments.dataset.category);
       giscusScript.setAttribute('data-category-id', comments.dataset.categoryId);
       giscusScript.setAttribute('data-mapping', comments.dataset.mapping || 'pathname');
-      giscusScript.setAttribute('data-reactions-enabled', '1');
+      giscusScript.setAttribute('data-strict', '0');
+      giscusScript.setAttribute('data-reactions-enabled', comments.dataset.reactionsEnabled || '1');
       giscusScript.setAttribute('data-emit-metadata', '0');
-      giscusScript.setAttribute('data-input-position', 'top');
-      giscusScript.setAttribute('data-theme', document.documentElement.dataset.theme === 'dark' ? 'dark_dimmed' : 'light');
+      giscusScript.setAttribute('data-input-position', comments.dataset.inputPosition || 'bottom');
+      giscusScript.setAttribute('data-theme', giscusTheme());
       giscusScript.setAttribute('data-lang', comments.dataset.lang || 'zh-CN');
+      giscusScript.addEventListener('error', function () {
+        showCommentsFallback('评论暂时无法加载，请稍后再试。');
+      });
       commentMount.appendChild(giscusScript);
+    };
+    if (giscusReady && commentMount) {
+      if ('IntersectionObserver' in window) {
+        var commentsObserver = new IntersectionObserver(function (entries, observer) {
+          if (!entries.some(function (entry) { return entry.isIntersecting; })) return;
+          observer.disconnect();
+          loadGiscus();
+        }, { rootMargin: '320px 0px' });
+        commentsObserver.observe(comments);
+      } else {
+        loadGiscus();
+      }
+    } else {
+      showCommentsFallback('评论功能正在完成 GitHub 配置，暂时可以前往 Discussions 查看。');
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        console.warn('[comments] Giscus requires repo, repoId, category, and categoryId in the theme configuration.');
+      }
     }
     document.addEventListener('regulusapples-blog:theme-change', function (event) {
-      var frame = document.querySelector('iframe.giscus-frame');
-      if (frame && frame.contentWindow) {
-        frame.contentWindow.postMessage({ giscus: { setConfig: { theme: event.detail.theme === 'dark' ? 'dark_dimmed' : 'light' } } }, 'https://giscus.app');
-      }
+      syncGiscusTheme(event.detail.theme);
     });
   }
 

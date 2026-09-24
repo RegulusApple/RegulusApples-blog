@@ -69,6 +69,10 @@ for (const marker of ['article-card', 'article-body', 'katex.min.css', 'article-
   assert(article.includes(marker), `Generated article is missing required feature marker: ${marker}`);
 }
 
+for (const marker of ['data-comments', 'data-input-position="bottom"', '>Comments<', '在 GitHub Discussions 中查看']) {
+  assert(article.includes(marker), `Generated article is missing required comment marker: ${marker}`);
+}
+
 assert(searchPage.includes('data-search-page') && Array.isArray(searchIndex) && searchIndex.length > 0, 'Generated local search page or index is missing.');
 
 for (const marker of ['theme-toggle', 'manifest.webmanifest', 'href="/stats/"', 'href="/reading/"', 'search-trigger', 'search-overlay', 'global-search-input']) {
@@ -93,8 +97,12 @@ for (const marker of ['weekly-page', '周小结模板已经准备好']) {
   assert(weeklyPage.includes(marker), `Generated weekly page is missing required feature marker: ${marker}`);
 }
 
-for (const marker of ['giscus.app/client.js', 'data-music-player', 'searchOverlay', 'serviceWorker.register', 'moduleHovered', 'is-expanded', 'is-module-clear', 'is-revealed', 'mouseenter']) {
+for (const marker of ['giscus.app/client.js', 'IntersectionObserver', 'data-input-position', 'regulusapples-blog:theme-change', 'data-music-player', 'searchOverlay', 'serviceWorker.register', 'moduleHovered', 'is-expanded', 'is-module-clear', 'is-revealed', 'mouseenter']) {
   assert(generatedScript.includes(marker), `Generated interaction script is missing required feature marker: ${marker}`);
+}
+
+for (const marker of ['.comments-card', '.comments-fallback', "html[data-theme='dark'] .comments-card"]) {
+  assert(homepageStyle.includes(marker), `Generated stylesheet is missing required comment marker: ${marker}`);
 }
 
 assert(!homepage.includes('googletagmanager.com/gtag/js') && !homepage.includes('data-website-id='), 'Analytics scripts must stay disabled until the user supplies an analytics identifier.');
@@ -117,6 +125,13 @@ const generatorSource = await readProject('scripts/regular-posts.js');
 for (const marker of ["register('index'", "register('archive'", "register('category'", "register('tag'", "register('post'", 'isWeekly']) {
   assert(generatorSource.includes(marker), `Regular/weekly post generator is missing required marker: ${marker}`);
 }
+
+const postLayoutSource = await readProject('themes/regulusapples-blog/layout/post.ejs');
+const weeklyPostLayoutSource = await readProject('themes/regulusapples-blog/layout/weekly-post.ejs');
+for (const marker of ['page.comments', 'page.comment', 'isWeeklyPost', 'data-comments', 'commentsEnabled']) {
+  assert(postLayoutSource.includes(marker), `Post layout is missing required comment guard: ${marker}`);
+}
+assert(!weeklyPostLayoutSource.includes('data-comments'), 'Weekly post layout must not include the article comment mount.');
 
 const linksSource = await readProject('source/links/index.md');
 assert(!linksSource.includes('](#)'), 'Links page still contains a dead placeholder link.');

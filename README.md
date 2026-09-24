@@ -79,7 +79,7 @@ tags:
 description:
 toc: true
 aside: true
-comment: true
+comments: true
 ---
 ```
 
@@ -129,6 +129,28 @@ root: /
 ```
 
 修改域名时，需要同时检查 DNS、GitHub Pages 的 Custom domain，以及这里的 `url` 配置。
+
+## 评论配置
+
+普通文章使用 Giscus 和 GitHub Discussions 提供评论。启用前需要在仓库中开启 Discussions，创建类型为 `General` 的 `Comments` 分类，再前往 <https://giscus.app/zh-CN> 获取 `repoId` 和 `categoryId`，填入 `themes/regulusapples-blog/_config.yml`：
+
+```yaml
+comments:
+  enabled: true
+  provider: giscus
+  repo: RegulusApple/RegulusApples-blog
+  repoId: 这里填写真实值
+  category: Comments
+  categoryId: 这里填写真实值
+```
+
+评论者需要使用 GitHub 登录，评论会公开保存在仓库的 Discussions 中。仓库所有者或拥有写入权限的账号可以在 GitHub Discussions 中隐藏、编辑、删除评论或锁定讨论。
+
+周小结默认不加载评论。普通文章如需单独关闭评论，可在 Front Matter 中设置：
+
+```yaml
+comments: false
+```
 
 ## 发布到 GitHub Pages
 

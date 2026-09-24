@@ -17,10 +17,34 @@
       <% if (page.cover) { %><img class="article-cover" loading="lazy" decoding="async" src="<%- url_for(page.cover) %>" alt="<%= page.title %> 封面"> <% } %>
       <div class="article-body"><%- page.content %></div>
       <% const commentConfig = theme.comments || {}; %>
-      <section class="article-comments" data-comments data-provider="<%= commentConfig.provider || '' %>" data-repo="<%= commentConfig.repo || '' %>" data-repo-id="<%= commentConfig.repo_id || '' %>" data-category="<%= commentConfig.category || '' %>" data-category-id="<%= commentConfig.category_id || '' %>" data-mapping="<%= commentConfig.mapping || 'pathname' %>" data-lang="<%= commentConfig.lang || 'zh-CN' %>">
-        <div class="related-heading"><p class="eyebrow">conversation</p><h2>留下回应</h2></div>
-        <% if (!commentConfig.enabled) { %><p class="comments-placeholder">评论区已经预留。配置 Giscus 或其他评论服务后，这里会变成可用的讨论区。</p><% } else { %><div class="comment-mount"><p class="comments-placeholder">正在加载评论区……</p></div><% } %>
-      </section>
+      <% const commentsEnabled = commentConfig.enabled === true || String(commentConfig.enabled).toLowerCase() === 'true'; %>
+      <% const commentsDisabledForPage = page.comments === false || String(page.comments).toLowerCase() === 'false' || page.comment === false || String(page.comment).toLowerCase() === 'false'; %>
+      <% const isWeeklyPost = page.weekly === true || String(page.weekly).toLowerCase() === 'true' || page.layout === 'weekly-post'; %>
+      <% const commentRepo = commentConfig.repo || ''; %>
+      <% const commentRepoId = commentConfig.repoId || commentConfig.repo_id || ''; %>
+      <% const commentCategory = commentConfig.category || ''; %>
+      <% const commentCategoryId = commentConfig.categoryId || commentConfig.category_id || ''; %>
+      <% const fallbackUrl = commentConfig.fallbackUrl || commentConfig.fallback_url || ''; %>
+      <% const giscusConfigured = Boolean(commentRepo && commentRepoId && commentCategory && commentCategoryId); %>
+      <% if (commentsEnabled && !commentsDisabledForPage && !isWeeklyPost) { %>
+        <section class="article-comments" data-comments data-provider="<%= commentConfig.provider || '' %>" data-repo="<%= commentRepo %>" data-repo-id="<%= commentRepoId %>" data-category="<%= commentCategory %>" data-category-id="<%= commentCategoryId %>" data-mapping="<%= commentConfig.mapping || 'pathname' %>" data-reactions-enabled="<%= commentConfig.reactionsEnabled === false || String(commentConfig.reactionsEnabled).toLowerCase() === 'false' ? '0' : '1' %>" data-input-position="<%= commentConfig.inputPosition || commentConfig.input_position || 'bottom' %>" data-lang="<%= commentConfig.lang || 'zh-CN' %>" data-fallback-url="<%= fallbackUrl %>" data-configured="<%= giscusConfigured ? 'true' : 'false' %>">
+          <header class="comments-heading">
+            <p class="eyebrow">conversation</p>
+            <h2>Comments</h2>
+            <p>读到这里，也欢迎留下你的想法。</p>
+          </header>
+          <div class="comments-card">
+            <div class="comment-mount" data-comment-mount aria-live="polite">
+              <p class="comments-placeholder" data-comments-status><%= giscusConfigured ? '评论区将在滚动到附近时加载。' : '评论功能正在完成 GitHub 配置，暂时可以前往 Discussions 查看。' %></p>
+            </div>
+            <div class="comments-fallback" data-comments-fallback<%= giscusConfigured ? ' hidden' : '' %>>
+              <p>评论暂时无法在这里加载。</p>
+              <% if (fallbackUrl) { %><a href="<%= fallbackUrl %>" target="_blank" rel="noopener noreferrer">在 GitHub Discussions 中查看 <span aria-hidden="true">→</span></a><% } %>
+            </div>
+            <% if (fallbackUrl) { %><noscript><p class="comments-noscript">浏览器需要启用 JavaScript 才能加载评论。<a href="<%= fallbackUrl %>" target="_blank" rel="noopener noreferrer">前往 GitHub Discussions</a></p></noscript><% } %>
+          </div>
+        </section>
+      <% } %>
       <footer class="article-footer"><a href="<%- url_for('/') %>">← 返回全部文章</a><span>Written by <%= config.author || theme.profile.name %></span></footer>
     </main>
   </div>
