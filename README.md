@@ -50,6 +50,9 @@ npm run new -- "文章标题"
 
 # 新建周记
 npm run new:weekly -- "本周记录"
+
+# 新建文章图片目录
+npm run image:new -- --date 2026-09 --name circuit-basics-p1
 ```
 
 ## 写文章
@@ -66,7 +69,19 @@ source/_posts/
 source/_drafts/
 ```
 
-新建文章后，编辑生成的 Markdown 文件即可。文章通常包含以下字段：
+新建文章后，编辑生成的 Markdown 文件即可。
+
+### 文章图片目录
+
+使用 `npm run image:new` 创建文章的图片目录：
+
+```bash
+npm run image:new -- --date 2026-09 --name circuit-basics-p1
+```
+
+`--date` 使用文章发布日期，格式为 `YYYY-MM`；缺少年份或月份目录时会自动创建，月份补足两位。`--name` 是你指定的文章图片目录名。以上示例会创建 `source/images/2026/2026_09/circuit-basics-p1/`。命令只创建目录，不会移动图片；如果目标目录已存在，命令会报错且不会覆盖。
+
+文章通常包含以下字段：
 
 ```yaml
 ---
